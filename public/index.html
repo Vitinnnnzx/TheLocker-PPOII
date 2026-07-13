@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE LOCKER - Feed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="navbar-content">
+            <!-- Logo -->
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M9 2L14 5.5V12.5L9 16L4 12.5V5.5L9 2Z" fill="#0C0C0E" />
+                        <path d="M6.5 7.5H11.5M9 7.5V13" stroke="#0C0C0E" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <span class="logo-text">THE LOCKER</span>
+            </div>
+
+            <!-- Search -->
+            <div class="search-container">
+                <div class="search-box">
+                    <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5" />
+                        <path d="M9.5 9.5L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    <input type="text" class="search-input" placeholder="Buscar atletas, equipes, treinos...">
+                </div>
+            </div>
+
+            <!-- Nav Actions -->
+            <div class="nav-actions">
+                <button class="nav-icon-btn">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M9 2C6.24 2 4 4.24 4 7v4l-1.5 2h13L14 11V7c0-2.76-2.24-5-5-5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                        <path d="M7 15c0 1.1.9 2 2 2s2-.9 2-2H7Z" stroke="currentColor" stroke-width="1.5" />
+                    </svg>
+                    <span class="notif-dot"></span>
+                </button>
+                <button class="nav-icon-btn">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M2 3h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H5l-3 3V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button class="profile-btn">
+                    <img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=64&h=64&fit=crop&auto=format" alt="Perfil">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <button class="nav-item active" onclick="setActive(this)">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <rect x="2" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+                        <rect x="11" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+                        <rect x="2" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+                        <rect x="11" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+                    </svg>
+                    Feed
+                </button>
+                <button class="nav-item" onclick="setActive(this)">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5" />
+                        <path d="M13 7l-2.5 5.5L5 13l3-5.5L13 7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                    </svg>
+                    Explorar
+                </button>
+                <button class="nav-item" onclick="setActive(this)">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 10h2m10 0h2M7 10h6M5 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        <path d="M7 7v6M13 7v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    Treinos
+                </button>
+                <button class="nav-item" onclick="setActive(this)">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5" />
+                        <circle cx="13" cy="7" r="3" stroke="currentColor" stroke-width="1.5" />
+                        <path d="M1 17c0-3.31 2.69-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        <path d="M13 11c3.31 0 6 2.69 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    Times
+                </button>
+                <button class="nav-item" onclick="setActive(this)">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 17V9M8 17V5M13 17v-6M18 17v-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    Estatísticas
+                </button>
+                <button class="nav-item" onclick="setActive(this)">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <rect x="2.5" y="3.5" width="15" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
+                        <path d="M2.5 8h15M7 2v3M13 2v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    Eventos
+                </button>
+            </nav>
+
+            <button class="post-btn">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Nova Postagem
+            </button>
+
+            <div class="my-teams">
+                <p class="section-title">Meus Times</p>
+                <div class="teams-list">
+                    <button class="team-item">
+                        <span class="team-dot" style="background: #FF4D4D;"></span>
+                        <div class="team-info">
+                            <span class="team-name">Flamengo FC</span>
+                            <span class="team-sport">Futebol</span>
+                        </div>
+                    </button>
+                    <button class="team-item">
+                        <span class="team-dot" style="background: #C8FF00;"></span>
+                        <div class="team-info">
+                            <span class="team-name">Team Alpha</span>
+                            <span class="team-sport">CrossFit</span>
+                        </div>
+                    </button>
+                    <button class="team-item">
+                        <span class="team-dot" style="background: #3B82F6;"></span>
+                        <div class="team-info">
+                            <span class="team-name">Run Crew SP</span>
+                            <span class="team-sport">Corrida</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="feed-layout">
+                <!-- Center Feed -->
+                <section class="feed">
+                    <!-- Stories -->
+                    <div class="stories-card">
+                        <div class="stories-container">
+                            <div class="story-item add-story">
+                                <div class="story-circle-dashed">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                    </svg>
+                                </div>
+                                <span class="story-name">Seu Story</span>
+                            </div>
+                            <div class="story-item">
+                                <div class="story-ring">
+                                    <img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=80&h=80&fit=crop&auto=format" alt="Lucas R.">
+                                </div>
+                                <span class="story-name">Lucas R.</span>
+                            </div>
+                            <div class="story-item">
+                                <div class="story-ring">
+                                    <img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=80&h=80&fit=crop&auto=format" alt="Ana Silva">
+                                </div>
+                                <span class="story-name">Ana Silva</span>
+                            </div>
+                            <div class="story-item">
+                                <div class="story-ring seen">
+                                    <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=80&h=80&fit=crop&auto=format" alt="Pedro M.">
+                                </div>
+                                <span class="story-name">Pedro M.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compose -->
+                    <div class="compose-card">
+                        <div class="compose-header">
+                            <img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=64&h=64&fit=crop&auto=format" alt="Você" class="compose-avatar">
+                            <textarea class="compose-textarea" placeholder="Compartilhe seu treino, conquista ou pergunta..." rows="1" onfocus="expandCompose(this)"></textarea>
+                        </div>
+                        <div id="compose-actions" class="compose-actions hidden">
+                            <div class="compose-tools">
+                                <button class="tool-btn">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4" /><circle cx="5.5" cy="5.5" r="1" fill="currentColor" /><path d="M2 10l3-3 2 2 3-3 4 4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
+                                </button>
+                                <button class="tool-btn">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4" /><path d="M5.5 9.5s.5 1.5 2.5 1.5 2.5-1.5 2.5-1.5M6 6.5h.01M10 6.5h.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" /></svg>
+                                </button>
+                            </div>
+                            <div class="compose-buttons">
+                                <button class="cancel-btn" onclick="shrinkCompose()">Cancelar</button>
+                                <button class="submit-btn">Publicar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="feed-tabs">
+                        <button class="tab-btn active">Para você</button>
+                        <button class="tab-btn">Seguindo</button>
+                        <button class="tab-btn">Times</button>
+                        <button class="tab-btn">Competições</button>
+                    </div>
+
+                    <!-- Posts -->
+                    <div id="posts-container" class="posts-list">
+                        <!-- Post 1 -->
+                        <article class="post-card">
+                            <div class="post-header">
+                                <div class="post-author-avatar">
+                                    <img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=80&h=80&fit=crop&auto=format" alt="Lucas Rodrigues">
+                                    <span class="sport-indicator" style="background: #3B82F6;"></span>
+                                </div>
+                                <div class="post-meta">
+                                    <div class="author-row">
+                                        <span class="author-name">Lucas Rodrigues</span>
+                                        <span class="sport-tag" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">Natação</span>
+                                    </div>
+                                    <div class="handle-row">
+                                        <span class="author-handle">@lucasrod</span>
+                                        <span class="dot">·</span>
+                                        <span class="post-time">2h atrás</span>
+                                    </div>
+                                </div>
+                                <button class="more-btn">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <circle cx="8" cy="4" r="1.2" fill="currentColor" />
+                                        <circle cx="8" cy="8" r="1.2" fill="currentColor" />
+                                        <circle cx="8" cy="12" r="1.2" fill="currentColor" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="post-content">
+                                <p>Sessão matinal concluída! 4km no pool olímpico, foco em técnica de virada. Sentindo evolução clara no crawl depois das ajustes do treinador. Domingo tem competição estadual — preparado! 💪</p>
+                            </div>
+                            <div class="post-stats">
+                                <div class="stat-pill">
+                                    <span class="stat-value" style="color: #C8FF00;">4.0</span>
+                                    <span class="stat-label">km</span>
+                                </div>
+                                <div class="stat-pill">
+                                    <span class="stat-value">1:45</span>
+                                    <span class="stat-label">min/km</span>
+                                </div>
+                                <div class="stat-pill">
+                                    <span class="stat-value">1:10:00</span>
+                                    <span class="stat-label">tempo</span>
+                                </div>
+                                <div class="stat-pill">
+                                    <span class="stat-value" style="color: #FF4D4D;">620</span>
+                                    <span class="stat-label">kcal</span>
+                                </div>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn" onclick="toggleLike(this)">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M8 13.5S2 9.5 2 5.5C2 3.57 3.57 2 5.5 2c1.05 0 2 .5 2.5 1.33C8.5 2.5 9.45 2 10.5 2 12.43 2 14 3.57 14 5.5c0 4-6 8-6 8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>284</span>
+                                </button>
+                                <button class="action-btn">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M2 3h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H5L2 15V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>31</span>
+                                </button>
+                                <button class="action-btn">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M3 8L6 4M3 8l3 4M13 4v2a6 6 0 0 1-6 6H6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>12</span>
+                                </button>
+                                <div class="spacer"></div>
+                                <button class="action-btn" onclick="toggleSave(this)">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M3 2h10a1 1 0 0 1 1 1v11l-6-3-6 3V3a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+
+                    <button class="load-more-btn">Carregar mais</button>
+                </section>
+
+                <!-- Right Panel -->
+                <aside class="right-panel">
+                    <!-- Week Stats -->
+                    <div class="panel-card">
+                        <p class="panel-title">Minha Semana</p>
+                        <div class="stats-grid">
+                            <div class="mini-stat-card">
+                                <span class="mini-stat-value" style="color: #C8FF00;">6</span>
+                                <span class="mini-stat-label">Treinos</span>
+                            </div>
+                            <div class="mini-stat-card">
+                                <span class="mini-stat-value" style="color: #3B82F6;">47.3<small>km</small></span>
+                                <span class="mini-stat-label">Km</span>
+                            </div>
+                            <div class="mini-stat-card">
+                                <span class="mini-stat-value">8:42<small>h</small></span>
+                                <span class="mini-stat-label">Tempo Ativo</span>
+                            </div>
+                            <div class="mini-stat-card">
+                                <span class="mini-stat-value" style="color: #FF4D4D;">4.280</span>
+                                <span class="mini-stat-label">Kcal</span>
+                            </div>
+                        </div>
+                        <div class="activity-chart">
+                            <p class="chart-label">Atividade Diária</p>
+                            <div class="chart-bars">
+                                <div class="bar" style="height: 35%;"></div>
+                                <div class="bar" style="height: 60%;"></div>
+                                <div class="bar" style="height: 80%;"></div>
+                                <div class="bar" style="height: 45%;"></div>
+                                <div class="bar active" style="height: 90%;"></div>
+                                <div class="bar" style="height: 70%;"></div>
+                                <div class="bar" style="height: 55%;"></div>
+                            </div>
+                            <div class="chart-days">
+                                <span>S</span><span>T</span><span>Q</span><span>Q</span><span class="active">S</span><span>S</span><span>D</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Suggested Athletes -->
+                    <div class="panel-card">
+                        <p class="panel-title">Atletas em Destaque</p>
+                        <div class="suggested-list">
+                            <div class="athlete-item">
+                                <img src="https://images.unsplash.com/photo-1526676317768-d9b14f15615a?w=64&h=64&fit=crop&auto=format" alt="Fernanda Costa">
+                                <div class="athlete-info">
+                                    <div class="athlete-name-row">
+                                        <span class="athlete-name">Fernanda Costa</span>
+                                        <svg class="verified-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" fill="#3B82F6" /><path d="M3.5 6l1.5 1.5L8.5 4.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                    </div>
+                                    <span class="athlete-meta">Triathlon · 12.4k seguidores</span>
+                                </div>
+                                <button class="follow-btn" onclick="toggleFollow(this)">Seguir</button>
+                            </div>
+                            <!-- More athletes here... -->
+                        </div>
+                        <button class="view-more-btn">Ver mais atletas →</button>
+                    </div>
+
+                    <!-- Events -->
+                    <div class="panel-card">
+                        <p class="panel-title">Próximos Eventos</p>
+                        <div class="events-list">
+                            <div class="event-item">
+                                <span class="event-dot" style="background: #FF4D4D;"></span>
+                                <div class="event-info">
+                                    <span class="event-name">Maratona de São Paulo</span>
+                                    <span class="event-meta">Corrida · 34.200 participantes</span>
+                                </div>
+                                <span class="event-date" style="color: #FF4D4D;">12 Out</span>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import { authRoutes } from "./routes/auth";
+import authRoutes from "./routes/auth";
 
 const PORT = 3000;
 
