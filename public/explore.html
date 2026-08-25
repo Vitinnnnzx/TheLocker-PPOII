@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE LOCKER - Feed</title>
+    <title>THE LOCKER - Explorar</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/public/style.css">
 </head>
-<body class="feed-page" data-page="feed">
-    <!-- Navbar -->
+<body class="explore-page" data-page="explore">
     <header class="navbar">
         <div class="navbar-content">
-            <!-- Logo -->
             <div class="logo-container">
                 <div class="logo-icon">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -24,7 +22,6 @@
                 <span class="logo-text">THE LOCKER</span>
             </div>
 
-            <!-- Search -->
             <div class="search-container">
                 <div class="search-box">
                     <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -35,7 +32,6 @@
                 </div>
             </div>
 
-            <!-- Nav Actions -->
             <div class="nav-actions">
                 <button class="nav-icon-btn" aria-label="Notificações">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -57,7 +53,6 @@
     </header>
 
     <div class="main-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <nav class="nav-menu">
                 <a class="nav-item" data-id="feed" href="/public/index.html">
@@ -116,102 +111,60 @@
 
             <div class="my-teams">
                 <p class="section-title">Meus Times</p>
-                <div class="teams-list" id="my-teams-list">
-                    <!-- Preenchido dinamicamente por js/render.js -->
-                </div>
+                <div class="teams-list" id="my-teams-list"></div>
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="content">
-            <div class="feed-layout">
-                <!-- Center Feed -->
-                <section class="feed">
-                    <!-- Stories -->
-                    <div class="stories-card">
-                        <div class="stories-container" id="stories-list">
-                            <div class="story-item add-story">
-                                <div class="story-circle-dashed">
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                        <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                                    </svg>
-                                </div>
-                                <span class="story-name">Seu Story</span>
-                            </div>
-                            <!-- Stories dos outros atletas são adicionados aqui por js/render.js -->
-                        </div>
+            <div class="explore-layout">
+                <!-- Filters -->
+                <section class="panel-card explore-filters">
+                    <p class="panel-title">Filtros</p>
+                    <div class="filter-group">
+                        <label class="filter-label" for="sport-filter">Esporte</label>
+                        <select class="filter-select" id="sport-filter">
+                            <option value="">Todos os esportes</option>
+                            <option value="natacao">Natação</option>
+                            <option value="corrida">Corrida</option>
+                            <option value="ciclismo">Ciclismo</option>
+                            <option value="crossfit">CrossFit</option>
+                            <option value="futebol">Futebol</option>
+                            <option value="musculacao">Musculação</option>
+                        </select>
                     </div>
-
-                    <!-- Compose -->
-                    <div class="compose-card">
-                        <div class="compose-header">
-                            <img src="" alt="" class="compose-avatar current-user-avatar">
-                            <textarea class="compose-textarea" placeholder="Compartilhe seu treino, conquista ou pergunta..." rows="1"></textarea>
-                        </div>
-                        <div id="compose-actions" class="compose-actions hidden">
-                            <div class="compose-tools">
-                                <button class="tool-btn" aria-label="Adicionar imagem">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4" /><circle cx="5.5" cy="5.5" r="1" fill="currentColor" /><path d="M2 10l3-3 2 2 3-3 4 4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
-                                </button>
-                                <button class="tool-btn" aria-label="Adicionar emoji">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4" /><path d="M5.5 9.5s.5 1.5 2.5 1.5 2.5-1.5 2.5-1.5M6 6.5h.01M10 6.5h.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" /></svg>
-                                </button>
-                            </div>
-                            <div class="compose-buttons">
-                                <button class="cancel-btn" data-action="compose-cancel">Cancelar</button>
-                                <button class="submit-btn">Publicar</button>
-                            </div>
-                        </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="level-filter">Nível</label>
+                        <select class="filter-select" id="level-filter">
+                            <option value="">Todos os níveis</option>
+                            <option value="iniciante">Iniciante</option>
+                            <option value="intermediario">Intermediário</option>
+                            <option value="avancado">Avançado</option>
+                            <option value="profissional">Profissional</option>
+                        </select>
                     </div>
-
-                    <!-- Tabs -->
-                    <div class="feed-tabs">
-                        <button class="tab-btn active">Para você</button>
-                        <button class="tab-btn">Seguindo</button>
-                        <button class="tab-btn">Times</button>
-                        <button class="tab-btn">Competições</button>
+                    <div class="filter-group">
+                        <label class="filter-label" for="location-filter">Localização</label>
+                        <input type="text" class="filter-input" id="location-filter" placeholder="Cidade ou estado...">
                     </div>
-
-                    <!-- Posts -->
-                    <div id="posts-container" class="posts-list">
-                        <!-- Preenchido dinamicamente por js/render.js -->
-                    </div>
-
-                    <button class="load-more-btn">Carregar mais</button>
                 </section>
 
-                <!-- Right Panel -->
-                <aside class="right-panel">
-                    <!-- Week Stats -->
-                    <div class="panel-card">
-                        <p class="panel-title">Minha Semana</p>
-                        <div class="stats-grid" id="week-stats-grid">
-                            <!-- Preenchido dinamicamente por js/render.js -->
-                        </div>
-                        <div class="activity-chart">
-                            <p class="chart-label">Atividade Diária</p>
-                            <div class="chart-bars" id="week-activity-chart-bars"></div>
-                            <div class="chart-days" id="week-activity-chart-days"></div>
-                        </div>
+                <!-- Results -->
+                <section class="explore-results">
+                    <div class="results-section">
+                        <p class="panel-title">Atletas Populares</p>
+                        <div class="athletes-grid" id="athletes-grid"></div>
                     </div>
 
-                    <!-- Suggested Athletes -->
-                    <div class="panel-card">
-                        <p class="panel-title">Atletas em Destaque</p>
-                        <div class="suggested-list" id="suggested-athletes-list">
-                            <!-- Preenchido dinamicamente por js/render.js -->
-                        </div>
-                        <button class="view-more-btn">Ver mais atletas →</button>
-                    </div>
-
-                    <!-- Events -->
-                    <div class="panel-card">
+                    <div class="results-section">
                         <p class="panel-title">Próximos Eventos</p>
-                        <div class="events-list" id="upcoming-events-list">
-                            <!-- Preenchido dinamicamente por js/render.js -->
-                        </div>
+                        <div class="events-list-explore" id="events-list-explore"></div>
                     </div>
-                </aside>
+
+                    <div class="results-section">
+                        <p class="panel-title">Trending</p>
+                        <div class="trending-tags" id="trending-tags"></div>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
