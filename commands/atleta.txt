@@ -1,0 +1,15 @@
+CREATE TABLE atleta (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER UNIQUE NOT NULL,
+    data_nascimento DATE,
+    cidade VARCHAR(100),
+    estado VARCHAR(2),
+    modalidade VARCHAR(50),
+    posicao VARCHAR(50),
+    bio TEXT,
+    foto TEXT,
+
+    FOREIGN KEY (usuario_id)
+        REFERENCES usuario(id)
+        ON DELETE CASCADE
+);

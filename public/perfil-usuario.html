@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil — The Locker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  {% include "partials/nav.html" %}
+
+  <div class="wrap page-body" style="max-width:640px">
+    <div id="conteudo">
+      <p class="skeleton">Carregando perfil…</p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    Locker.initNav();
+    const usuarioId = {{ usuario_id }};
+    const conteudo = document.getElementById("conteudo");
+
+    async function carregar() {
+      // GET /perfil/usuario/<id>/dados
+      const { ok, data: u } = await Locker.api(`/perfil/usuario/${usuarioId}/dados`);
+
+      if (!ok) {
+        conteudo.innerHTML = `<div class="empty-state"><strong>Perfil não encontrado</strong></div>`;
+        return;
+      }
+
+      const { data: eu } = await Locker.api("/usuario");
+      const souEu = eu && eu.id === usuarioId;
+
+      let seguindo = false;
+      if (!souEu) {
+        const r = await Locker.api(`/perfil/seguindo/${usuarioId}`);
+        seguindo = r.ok && r.data.seguindo;
+      }
+
+      const foto = u.foto
+        ? `<img class="avatar" src="${Locker.escapeHtml(u.foto)}" alt="">`
+        : `<div class="avatar">${Locker.initials(u.nome)}</div>`;
+
+      const localTxt = [u.cidade, u.estado].filter(Boolean).join(" / ");
+      const esporteTxt = [u.modalidade, u.posicao].filter(Boolean).join(" · ");
+
+      conteudo.innerHTML = `
+        <div class="profile-head">
+          ${foto}
+          <div>
+            <div class="profile-name">
+              <h2 style="margin:0">${Locker.escapeHtml(u.nome)}</h2>
+              <span class="tag tipo-${u.tipo}">${Locker.tipoLabel(u.tipo)}</span>
+            </div>
+            ${localTxt ? `<p style="margin:2px 0 0">${Locker.escapeHtml(localTxt)}</p>` : ""}
+            ${esporteTxt ? `<p style="margin:2px 0 0">${Locker.escapeHtml(esporteTxt)}</p>` : ""}
+            ${u.bio ? `<p class="profile-bio">${Locker.escapeHtml(u.bio)}</p>` : ""}
+            <div class="profile-stats">
+              <div class="stat"><b>${u.seguidores}</b><span>seguidores</span></div>
+              <div class="stat"><b>${u.seguindo}</b><span>seguindo</span></div>
+            </div>
+          </div>
+          ${souEu ? "" : `
+            <div class="profile-actions">
+              <button class="btn ${seguindo ? "btn-ghost" : "btn-primary"} btn-sm" type="button" data-seguir>${seguindo ? "Deixar de seguir" : "Seguir"}</button>
+            </div>`}
+        </div>`;
+
+      const btn = document.querySelector("[data-seguir]");
+      if (btn) {
+        btn.addEventListener("click", async () => {
+          const seguindoAgora = btn.textContent.trim() === "Deixar de seguir";
+          // POST/DELETE /perfil/seguir/<id>
+          const { ok } = await Locker.api(`/perfil/seguir/${usuarioId}`, seguindoAgora ? "DELETE" : "POST");
+          if (ok) carregar();
+        });
+      }
+    }
+
+    carregar();
+  </script>
+</body>
+</html>

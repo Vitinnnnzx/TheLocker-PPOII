@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criar conta — The Locker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-side">
+      <a class="brand" href="/">the<span>locker</span></a>
+      <p class="auth-tagline">Escolha como você entra em campo: como <em>atleta</em> ou como <em>torcedor</em>.</p>
+      <p class="auth-foot">Vai cadastrar um time ou clube? <a href="/criar-time">Use o cadastro de time</a>.</p>
+    </div>
+
+    <div class="auth-form-col">
+      <div class="auth-card">
+        <h2>Criar conta</h2>
+        <p class="sub">Leva menos de um minuto.</p>
+
+        <div class="form-msg" data-msg></div>
+
+        <form id="form-conta" novalidate>
+          <div class="field">
+            <label>Tipo de conta</label>
+            <div class="choice-group">
+              <label class="choice is-checked" data-choice>
+                <input type="radio" name="tipo" value="atleta" checked>
+                <strong>Atleta</strong>
+                <span>tenho perfil de jogador(a)</span>
+              </label>
+              <label class="choice" data-choice>
+                <input type="radio" name="tipo" value="comum">
+                <strong>Torcedor</strong>
+                <span>quero seguir e curtir</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" name="nome" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" autocomplete="new-password" minlength="6" required>
+          </div>
+          <div class="field">
+            <label for="senha2">Confirmar senha</label>
+            <input type="password" id="senha2" name="senha2" autocomplete="new-password" minlength="6" required>
+          </div>
+
+          <button class="btn btn-primary btn-block" type="submit" data-submit>Criar conta</button>
+        </form>
+
+        <p class="auth-switch">Já tem conta? <a href="/login">Entrar</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    const form = document.getElementById("form-conta");
+    const msgEl = document.querySelector("[data-msg]");
+    const submitBtn = document.querySelector("[data-submit]");
+
+    document.querySelectorAll("[data-choice]").forEach((label) => {
+      label.addEventListener("click", () => {
+        document.querySelectorAll("[data-choice]").forEach(l => l.classList.remove("is-checked"));
+        label.classList.add("is-checked");
+      });
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      Locker.hideMsg(msgEl);
+
+      const nome = form.nome.value.trim();
+      const email = form.email.value.trim();
+      const senha = form.senha.value;
+      const senha2 = form.senha2.value;
+      const tipo = form.tipo.value;
+
+      if (senha !== senha2) {
+        Locker.showMsg(msgEl, "As senhas não são iguais.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Criando conta…";
+
+      // POST /criar-conta (auth.py) -> INSERT INTO usuario (e em atleta, se for o caso)
+      const { ok, data } = await Locker.api("/criar-conta", "POST", { nome, email, senha, tipo });
+
+      if (ok) {
+        location.href = "/login?criada=1";
+        return;
+      }
+
+      Locker.showMsg(msgEl, data.erro || "Não foi possível criar a conta.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Criar conta";
+    });
+  </script>
+</body>
+</html>

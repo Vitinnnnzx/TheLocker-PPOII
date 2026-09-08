@@ -1,0 +1,18 @@
+CREATE TABLE seguidor (
+    id SERIAL PRIMARY KEY,
+    seguidor_id INTEGER NOT NULL,
+    seguido_id INTEGER NOT NULL,
+    data_seguimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (seguidor_id)
+        REFERENCES usuario(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (seguido_id)
+        REFERENCES usuario(id)
+        ON DELETE CASCADE,
+
+    UNIQUE(seguidor_id, seguido_id),
+
+    CHECK (seguidor_id <> seguido_id)
+);

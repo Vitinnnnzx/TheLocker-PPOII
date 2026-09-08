@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time — The Locker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  {% include "partials/nav.html" %}
+
+  <div class="wrap page-body" style="max-width:640px">
+    <div id="conteudo">
+      <p class="skeleton">Carregando time…</p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    Locker.initNav();
+    const timeId = {{ time_id }};
+    const conteudo = document.getElementById("conteudo");
+
+    function rosterRowHtml(a) {
+      const foto = a.foto
+        ? `<img class="avatar" src="${Locker.escapeHtml(a.foto)}" alt="">`
+        : `<div class="avatar">${Locker.initials(a.nome)}</div>`;
+      const detalhe = [a.modalidade, a.posicao].filter(Boolean).join(" · ") || "—";
+      return `
+        <div class="roster-row">
+          ${foto}
+          <div class="meta"><b>${Locker.escapeHtml(a.nome)}</b><span>${Locker.escapeHtml(detalhe)}</span></div>
+        </div>`;
+    }
+
+    async function carregar() {
+      // GET /perfil/time/<id>/dados -> time + elenco atual
+      const { ok, data: t } = await Locker.api(`/perfil/time/${timeId}/dados`);
+
+      if (!ok) {
+        conteudo.innerHTML = `<div class="empty-state"><strong>Time não encontrado</strong></div>`;
+        return;
+      }
+
+      const foto = t.escudo
+        ? `<img class="avatar" src="${Locker.escapeHtml(t.escudo)}" alt="">`
+        : `<div class="avatar">${Locker.initials(t.nome)}</div>`;
+
+      conteudo.innerHTML = `
+        <div class="profile-head">
+          ${foto}
+          <div>
+            <div class="profile-name">
+              <h2 style="margin:0">${Locker.escapeHtml(t.nome)}</h2>
+              <span class="tag tipo-time">Time</span>
+            </div>
+            <p style="margin:2px 0 0">${[t.cidade, t.estado].filter(Boolean).join(" / ") || "Localização não informada"}</p>
+          </div>
+        </div>
+
+        <div class="section-title">Elenco</div>
+        <div class="roster">
+          ${t.atletas && t.atletas.length ? t.atletas.map(rosterRowHtml).join("") : `<div class="empty-state"><strong>Elenco vazio</strong></div>`}
+        </div>`;
+    }
+
+    carregar();
+  </script>
+</body>
+</html>

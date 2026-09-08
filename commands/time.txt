@@ -1,0 +1,11 @@
+CREATE TABLE time (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    usuario_id INTEGER UNIQUE NOT NULL,
+    cidade VARCHAR(100),
+    estado VARCHAR(2),
+    escudo TEXT,
+    FOREIGN KEY (usuario_id)
+    REFERENCES usuario(id)
+    ON DELETE CASCADE
+);

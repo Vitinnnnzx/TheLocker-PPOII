@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu perfil — The Locker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  {% include "partials/nav.html" %}
+
+  <div class="wrap page-body" style="max-width:640px">
+    <div id="conteudo">
+      <p class="skeleton">Carregando perfil…</p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    Locker.initNav();
+    const conteudo = document.getElementById("conteudo");
+
+    async function carregar() {
+      // GET /perfil/dados -> usuario + atleta (LEFT JOIN)
+      const { ok, data: perfil } = await Locker.api("/perfil/dados");
+
+      if (!ok) {
+        conteudo.innerHTML = `<div class="empty-state"><strong>Não foi possível carregar seu perfil</strong></div>`;
+        return;
+      }
+
+      const [{ data: times }, { data: seguidores }, { data: seguindo }] = await Promise.all([
+        Locker.api("/perfil/times"),
+        Locker.api("/perfil/seguidores"),
+        Locker.api("/perfil/seguindo"),
+      ]);
+
+      const foto = perfil.foto
+        ? `<img class="avatar" src="${Locker.escapeHtml(perfil.foto)}" alt="">`
+        : `<div class="avatar">${Locker.initials(perfil.nome)}</div>`;
+
+      const localTxt = [perfil.cidade, perfil.estado].filter(Boolean).join(" / ");
+      const esporteTxt = [perfil.modalidade, perfil.posicao].filter(Boolean).join(" · ");
+
+      let html = `
+        <div class="profile-head">
+          ${foto}
+          <div>
+            <div class="profile-name">
+              <h2 style="margin:0">${Locker.escapeHtml(perfil.nome)}</h2>
+              <span class="tag tipo-${perfil.tipo}">${Locker.tipoLabel(perfil.tipo)}</span>
+            </div>
+            <p style="margin:2px 0 0">${Locker.escapeHtml(perfil.email)}</p>
+            ${localTxt ? `<p style="margin:2px 0 0">${Locker.escapeHtml(localTxt)}</p>` : ""}
+            ${esporteTxt ? `<p style="margin:2px 0 0">${Locker.escapeHtml(esporteTxt)}</p>` : ""}
+            ${perfil.bio ? `<p class="profile-bio">${Locker.escapeHtml(perfil.bio)}</p>` : ""}
+            <div class="profile-stats">
+              <div class="stat"><b>${(Array.isArray(seguidores) ? seguidores.length : 0)}</b><span>seguidores</span></div>
+              <div class="stat"><b>${(Array.isArray(seguindo) ? seguindo.length : 0)}</b><span>seguindo</span></div>
+              ${perfil.tipo === "atleta" ? `<div class="stat"><b>${(Array.isArray(times) ? times.length : 0)}</b><span>times</span></div>` : ""}
+            </div>
+          </div>
+          <div class="profile-actions">
+            <a class="btn btn-ghost btn-sm" href="/config">Editar perfil</a>
+          </div>
+        </div>`;
+
+      if (perfil.tipo === "atleta") {
+        html += `<div class="section-title">Times</div>`;
+        if (Array.isArray(times) && times.length) {
+          html += `<div class="roster">` + times.map(t => `
+            <div class="roster-row">
+              ${t.escudo ? `<img class="avatar" src="${Locker.escapeHtml(t.escudo)}" alt="">` : `<div class="avatar">${Locker.initials(t.nome)}</div>`}
+              <div class="meta">
+                <b>${Locker.escapeHtml(t.nome)}</b>
+                <span>${[t.cidade, t.estado].filter(Boolean).join(" / ") || "—"}${t.data_saida ? " · saiu do time" : " · ativo"}</span>
+              </div>
+            </div>`).join("") + `</div>`;
+        } else {
+          html += `<div class="empty-state"><strong>Nenhum time ainda</strong>Você aparece aqui assim que um time te adicionar ao elenco.</div>`;
+        }
+      }
+
+      if (perfil.tipo === "time") {
+        html += `<p><a class="btn btn-ghost btn-sm" href="/time-perfil">Gerenciar meu time →</a></p>`;
+      }
+
+      conteudo.innerHTML = html;
+    }
+
+    carregar();
+  </script>
+</body>
+</html>

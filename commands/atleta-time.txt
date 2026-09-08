@@ -1,0 +1,34 @@
+CREATE TABLE atleta_time (
+    id SERIAL PRIMARY KEY,
+    atleta_id INTEGER NOT NULL,
+    time_id INTEGER NOT NULL,
+    data_entrada DATE,
+    data_saida DATE,
+
+    FOREIGN KEY (atleta_id)
+        REFERENCES atleta(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (time_id)
+        REFERENCES time(id)
+        ON DELETE CASCADE,
+
+    -- Garante que a data de saída nunca vem antes da data de entrada.
+    CHECK (data_saida IS NULL OR data_saida >= data_entrada)
+);
+
+-- BUG original: um UNIQUE(atleta_id, time_id) na própria tabela impedia
+-- que um atleta voltasse a jogar pelo mesmo time depois de sair, pois
+-- qualquer vínculo antigo (mesmo já encerrado, com data_saida preenchida)
+-- bloqueava um novo INSERT com o mesmo par (atleta_id, time_id).
+-- A rota adicionar_atleta só verifica vínculos ATIVOS (data_saida IS NULL),
+-- então o índice único também deve valer só para vínculos ativos:
+CREATE UNIQUE INDEX atleta_time_vinculo_ativo_unico
+    ON atleta_time (atleta_id, time_id)
+    WHERE data_saida IS NULL;
+
+-- Postgres não cria índice automático em colunas de FK (só na PK).
+-- Sem isso, listar atletas de um time (WHERE time_id = ...) faz um
+-- sequential scan à medida que a tabela cresce.
+CREATE INDEX atleta_time_time_id_idx ON atleta_time (time_id);
+CREATE INDEX atleta_time_atleta_id_idx ON atleta_time (atleta_id);

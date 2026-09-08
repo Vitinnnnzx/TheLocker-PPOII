@@ -1,0 +1,19 @@
+CREATE TABLE publicacao (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL,
+    texto TEXT,
+    imagem VARCHAR(255),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id)
+        REFERENCES usuario(id)
+        ON DELETE CASCADE
+);
+
+-- BUG original: publicacao.atleta_id referenciava atleta(id), então só
+-- quem tinha perfil de atleta conseguia postar. Contas de time (tipo='time')
+-- não têm linha em atleta, então tentar postar quebrava com um erro de
+-- banco não tratado. Trocado para usuario_id, igual comentario/curtida,
+-- assim tanto atleta quanto time podem publicar.
+
+CREATE INDEX publicacao_usuario_id_idx ON publicacao (usuario_id);

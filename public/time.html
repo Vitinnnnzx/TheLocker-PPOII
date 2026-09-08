@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu time — The Locker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  {% include "partials/nav.html" %}
+
+  <div class="wrap page-body" style="max-width:640px">
+    <div id="conteudo">
+      <p class="skeleton">Carregando time…</p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    Locker.initNav();
+    const conteudo = document.getElementById("conteudo");
+    let timeId = null;
+
+    function rosterRowHtml(a) {
+      const foto = a.foto
+        ? `<img class="avatar" src="${Locker.escapeHtml(a.foto)}" alt="">`
+        : `<div class="avatar">${Locker.initials(a.nome)}</div>`;
+      const detalhe = [a.modalidade, a.posicao].filter(Boolean).join(" · ") || "—";
+      return `
+        <div class="roster-row" data-atleta-id="${a.atleta_id}">
+          ${foto}
+          <div class="meta"><b>${Locker.escapeHtml(a.nome)}</b><span>${Locker.escapeHtml(detalhe)}</span></div>
+          <button class="btn btn-danger btn-sm" type="button" data-remover>Remover</button>
+        </div>`;
+    }
+
+    async function carregarRoster() {
+      const { ok, data } = await Locker.api(`/time/${timeId}/atletas`);
+      const el = document.getElementById("roster");
+      if (!ok) { el.innerHTML = `<p class="hint">Não foi possível carregar o elenco.</p>`; return; }
+      el.innerHTML = data.length
+        ? data.map(rosterRowHtml).join("")
+        : `<div class="empty-state"><strong>Elenco vazio</strong>Adicione atletas pelo ID de usuário deles.</div>`;
+    }
+
+    async function carregar() {
+      // GET /time/meu -> descobre o time_id da conta logada
+      const meu = await Locker.api("/time/meu");
+
+      if (!meu.ok) {
+        conteudo.innerHTML = `<div class="empty-state"><strong>Esta conta não é um time</strong>Entre com uma conta de time para gerenciar um elenco.</div>`;
+        return;
+      }
+
+      timeId = meu.data.time_id;
+
+      const { data: time } = await Locker.api(`/time/${timeId}`);
+
+      conteudo.innerHTML = `
+        <div class="profile-head">
+          ${time.escudo ? `<img class="avatar" src="${Locker.escapeHtml(time.escudo)}" alt="">` : `<div class="avatar">${Locker.initials(time.nome)}</div>`}
+          <div>
+            <div class="profile-name">
+              <h2 style="margin:0">${Locker.escapeHtml(time.nome)}</h2>
+              <span class="tag tipo-time">Time</span>
+            </div>
+            <p style="margin:2px 0 0">${[time.cidade, time.estado].filter(Boolean).join(" / ") || "Localização não informada"}</p>
+          </div>
+          <div class="profile-actions">
+            <a class="btn btn-ghost btn-sm" href="/config">Editar dados</a>
+          </div>
+        </div>
+
+        <div class="section-title">Adicionar atleta ao elenco</div>
+        <div class="form-msg" data-msg></div>
+        <form id="form-add" style="display:flex;gap:10px;align-items:flex-end;margin-bottom:20px">
+          <div class="field" style="flex:1;margin-bottom:0">
+            <label for="usuario_id">ID de usuário do atleta</label>
+            <input type="number" id="usuario_id" min="1" required>
+            <p class="hint">O atleta encontra o próprio ID no perfil dele.</p>
+          </div>
+          <button class="btn btn-primary" type="submit">Adicionar</button>
+        </form>
+
+        <div class="section-title">Elenco atual</div>
+        <div class="roster" id="roster"></div>`;
+
+      document.getElementById("form-add").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const msgEl = document.querySelector("[data-msg]");
+        Locker.hideMsg(msgEl);
+
+        const usuario_id = Number(document.getElementById("usuario_id").value);
+
+        // POST /time/<id>/atleta
+        const { ok, data } = await Locker.api(`/time/${timeId}/atleta`, "POST", { usuario_id });
+
+        if (!ok) {
+          Locker.showMsg(msgEl, data.erro || "Não foi possível adicionar o atleta.");
+          return;
+        }
+
+        document.getElementById("usuario_id").value = "";
+        carregarRoster();
+      });
+
+      document.getElementById("roster").addEventListener("click", async (e) => {
+        const btn = e.target.closest("[data-remover]");
+        if (!btn) return;
+        const row = btn.closest("[data-atleta-id]");
+        const atletaId = row.dataset.atletaId;
+
+        // DELETE /time/<id>/atleta/<atleta_id>
+        const { ok } = await Locker.api(`/time/${timeId}/atleta/${atletaId}`, "DELETE");
+        if (ok) row.remove();
+      });
+
+      carregarRoster();
+    }
+
+    carregar();
+  </script>
+</body>
+</html>

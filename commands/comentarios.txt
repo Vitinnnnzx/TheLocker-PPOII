@@ -1,0 +1,15 @@
+CREATE TABLE comentario (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL,
+    publicacao_id INTEGER NOT NULL,
+    texto TEXT NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id)
+        REFERENCES usuario(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (publicacao_id)
+        REFERENCES publicacao(id)
+        ON DELETE CASCADE
+);

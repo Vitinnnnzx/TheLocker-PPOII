@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurações — The Locker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  {% include "partials/nav.html" %}
+
+  <div class="wrap page-body" style="max-width:560px">
+    <h2>Configurações</h2>
+    <p class="sub">Atualize seus dados. Deixe a senha em branco pra mantê-la.</p>
+
+    <div class="form-msg" data-msg></div>
+
+    <form id="form-config" class="card" novalidate>
+      <div class="field-row">
+        <div class="field"><label for="nome">Nome</label><input id="nome" type="text"></div>
+        <div class="field"><label for="email">Email</label><input id="email" type="email"></div>
+      </div>
+
+      <div id="campos-atleta" style="display:none">
+        <div class="field"><label for="foto">Link da foto</label><input id="foto" type="url" placeholder="https://…"></div>
+        <div class="field"><label for="bio">Bio</label><textarea id="bio" rows="3"></textarea></div>
+        <div class="field-row">
+          <div class="field"><label for="data_nascimento">Nascimento</label><input id="data_nascimento" type="date"></div>
+          <div class="field"><label for="cidade">Cidade</label><input id="cidade" type="text"></div>
+          <div class="field" style="max-width:90px"><label for="estado">UF</label><input id="estado" type="text" maxlength="2"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="modalidade">Modalidade</label><input id="modalidade" type="text" placeholder="Futebol, vôlei…"></div>
+          <div class="field"><label for="posicao">Posição</label><input id="posicao" type="text"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="senha">Nova senha</label>
+        <input id="senha" type="password" autocomplete="new-password" minlength="6" placeholder="Deixe em branco pra não alterar">
+      </div>
+
+      <button class="btn btn-primary" type="submit" data-submit>Salvar alterações</button>
+    </form>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    Locker.initNav();
+
+    const form = document.getElementById("form-config");
+    const msgEl = document.querySelector("[data-msg]");
+    const submitBtn = document.querySelector("[data-submit]");
+    const camposAtleta = document.getElementById("campos-atleta");
+
+    async function preencher() {
+      const { ok, data: perfil } = await Locker.api("/perfil/dados");
+      if (!ok) return;
+
+      form.nome.value = perfil.nome || "";
+      form.email.value = perfil.email || "";
+
+      if (perfil.tipo === "atleta") {
+        camposAtleta.style.display = "block";
+        form.foto.value = perfil.foto || "";
+        form.bio.value = perfil.bio || "";
+        form.data_nascimento.value = perfil.data_nascimento ? perfil.data_nascimento.slice(0, 10) : "";
+        form.cidade.value = perfil.cidade || "";
+        form.estado.value = perfil.estado || "";
+        form.modalidade.value = perfil.modalidade || "";
+        form.posicao.value = perfil.posicao || "";
+      }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      Locker.hideMsg(msgEl);
+
+      const payload = {
+        nome: form.nome.value.trim() || null,
+        email: form.email.value.trim() || null,
+        senha: form.senha.value || null,
+      };
+
+      if (camposAtleta.style.display === "block") {
+        Object.assign(payload, {
+          foto: form.foto.value.trim() || null,
+          bio: form.bio.value.trim() || null,
+          data_nascimento: form.data_nascimento.value || null,
+          cidade: form.cidade.value.trim() || null,
+          estado: form.estado.value.trim() || null,
+          modalidade: form.modalidade.value.trim() || null,
+          posicao: form.posicao.value.trim() || null,
+        });
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Salvando…";
+
+      // PUT /perfil/config
+      const { ok, data } = await Locker.api("/perfil/config", "PUT", payload);
+
+      Locker.showMsg(msgEl, ok ? "Perfil atualizado com sucesso!" : (data.erro || "Não foi possível salvar."), ok ? "ok" : "error");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Salvar alterações";
+      form.senha.value = "";
+    });
+
+    preencher();
+  </script>
+</body>
+</html>

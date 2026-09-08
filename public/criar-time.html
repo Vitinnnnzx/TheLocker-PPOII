@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastrar time — The Locker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-side">
+      <a class="brand" href="/">the<span>locker</span></a>
+      <p class="auth-tagline">Todo time também é uma conta — publique, monte o elenco e gerencie quem entra e sai.</p>
+      <p class="auth-foot">É atleta ou torcedor? <a href="/criar-conta">Crie uma conta pessoal</a>.</p>
+    </div>
+
+    <div class="auth-form-col">
+      <div class="auth-card">
+        <h2>Cadastrar time</h2>
+        <p class="sub">Cria uma conta própria para o clube ou equipe.</p>
+
+        <div class="form-msg" data-msg></div>
+
+        <form id="form-time" novalidate>
+          <div class="field">
+            <label for="nome">Nome do time</label>
+            <input type="text" id="nome" name="nome" required>
+          </div>
+          <div class="field">
+            <label for="email">Email do time</label>
+            <input type="email" id="email" name="email" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" autocomplete="new-password" minlength="6" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="cidade">Cidade</label>
+              <input type="text" id="cidade" name="cidade">
+            </div>
+            <div class="field" style="max-width:110px">
+              <label for="estado">Estado</label>
+              <input type="text" id="estado" name="estado" maxlength="2" placeholder="SC">
+            </div>
+          </div>
+          <div class="field">
+            <label for="escudo">Link do escudo (opcional)</label>
+            <input type="url" id="escudo" name="escudo" placeholder="https://…">
+          </div>
+
+          <button class="btn btn-primary btn-block" type="submit" data-submit>Cadastrar time</button>
+        </form>
+
+        <p class="auth-switch">Já tem conta de time? <a href="/login">Entrar</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    const form = document.getElementById("form-time");
+    const msgEl = document.querySelector("[data-msg]");
+    const submitBtn = document.querySelector("[data-submit]");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      Locker.hideMsg(msgEl);
+
+      const estado = form.estado.value.trim().toUpperCase();
+      if (estado && estado.length !== 2) {
+        Locker.showMsg(msgEl, "Estado deve ter 2 letras, ex: SC.");
+        return;
+      }
+
+      const payload = {
+        nome: form.nome.value.trim(),
+        email: form.email.value.trim(),
+        senha: form.senha.value,
+        cidade: form.cidade.value.trim() || null,
+        estado: estado || null,
+        escudo: form.escudo.value.trim() || null,
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Cadastrando…";
+
+      // POST /time (times.py) -> cria usuario tipo="time" + linha em time
+      const { ok, data } = await Locker.api("/time", "POST", payload);
+
+      if (ok) {
+        location.href = "/login?criada=1";
+        return;
+      }
+
+      Locker.showMsg(msgEl, data.erro || "Não foi possível cadastrar o time.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Cadastrar time";
+    });
+  </script>
+</body>
+</html>

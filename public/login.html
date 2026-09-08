@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — The Locker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-side">
+      <a class="brand" href="/">the<span>locker</span></a>
+      <p class="auth-tagline">Cada login te leva direto pro <em>seu</em> vestiário — de atleta, de time ou de torcedor.</p>
+      <p class="auth-foot">Ainda não tem conta? <a href="/criar-conta">Crie a sua</a> ou <a href="/criar-time">cadastre seu time</a>.</p>
+    </div>
+
+    <div class="auth-form-col">
+      <div class="auth-card">
+        <h2>Entrar</h2>
+        <p class="sub">Informe seu email e senha para acessar sua conta.</p>
+
+        <div class="form-msg" data-msg></div>
+
+        <form id="form-login" novalidate>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit" data-submit>Entrar</button>
+        </form>
+
+        <p class="auth-switch">Não tem conta? <a href="/criar-conta">Cadastre-se</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    const form = document.getElementById("form-login");
+    const msgEl = document.querySelector("[data-msg]");
+    const submitBtn = document.querySelector("[data-submit]");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      Locker.hideMsg(msgEl);
+
+      const email = form.email.value.trim();
+      const senha = form.senha.value;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Entrando…";
+
+      // POST /login -> Backend (auth.py) confere na tabela usuario
+      const { ok, data } = await Locker.api("/login", "POST", { email, senha });
+
+      if (ok) {
+        location.href = "/inicio";
+        return;
+      }
+
+      Locker.showMsg(msgEl, data.erro || "Não foi possível entrar. Tente novamente.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Entrar";
+    });
+  </script>
+</body>
+</html>
