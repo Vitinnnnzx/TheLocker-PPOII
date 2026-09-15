@@ -1,11 +1,14 @@
 from flask import render_template, Blueprint
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 app_pages = Blueprint("pages", __name__)
 
 @app_pages.route("/")
 def index():
-    return render_template("index.html")
+    if current_user.is_authenticated:
+        return render_template("inicio.html")
+    else: 
+        return render_template("index.html")
 
 
 @app_pages.route("/login")
@@ -16,12 +19,6 @@ def login():
 @app_pages.route("/criar-conta")
 def criar_conta():
     return render_template("criar-conta.html")
-
-
-@app_pages.route("/inicio")
-@login_required
-def inicio():
-    return render_template("inicio.html")
 
 
 @app_pages.route("/perfil")

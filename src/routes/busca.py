@@ -20,13 +20,12 @@ def buscar():
     try:
         busca = f"%{texto}%"
 
-        # Buscar usuários
         cursor.execute("""
             SELECT id, nome, tipo
             FROM usuario
             WHERE nome ILIKE %s
             ORDER BY nome
-            LIMIT 20
+            LIMIT 10
         """, (busca,))
 
         usuarios = [
@@ -38,7 +37,6 @@ def buscar():
             for usuario in cursor.fetchall()
         ]
 
-        # Buscar times
         cursor.execute("""
             SELECT id, nome, cidade, estado, escudo
             FROM time

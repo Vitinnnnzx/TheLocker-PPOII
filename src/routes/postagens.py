@@ -25,12 +25,6 @@ def criar_postagem():
     cursor = conn.cursor()
 
     try:
-        # BUG original: inseria com atleta_id obtido via subquery em
-        # atleta — contas de time (tipo='time') não têm linha em atleta,
-        # então a subquery retornava NULL e o INSERT quebrava com um
-        # erro de NOT NULL não tratado (sem try/except aqui). Agora
-        # publicacao referencia usuario_id diretamente, então tanto
-        # atleta quanto time conseguem postar.
         cursor.execute(
             """
             INSERT INTO publicacao (usuario_id, texto, imagem)
@@ -62,6 +56,7 @@ def criar_postagem():
     finally:
         cursor.close()
         conn.close()
+
 
 @postagens.route("/postagens", methods=["GET"])
 def pegar_postagens():

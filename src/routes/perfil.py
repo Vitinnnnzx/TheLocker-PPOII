@@ -196,6 +196,8 @@ def pegar_meu_seguindo():
     finally:
         cursor.close()
         conn.close()
+
+
 @perfil.route("/perfil/usuario/<int:usuario_id>", methods=["GET"])
 def pagina_perfil_usuario(usuario_id):
     return render_template(
@@ -266,6 +268,8 @@ def pegar_perfil_usuario(usuario_id):
     finally:
         cursor.close()
         conn.close()
+
+
 @perfil.route("/perfil/time/<int:time_id>", methods=["GET"])
 def pagina_perfil_time(time_id):
     return render_template(

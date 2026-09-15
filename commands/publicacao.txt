@@ -2,7 +2,7 @@ CREATE TABLE publicacao (
     id SERIAL PRIMARY KEY,
     usuario_id INTEGER NOT NULL,
     texto TEXT,
-    imagem VARCHAR(255),
+    imagem TEXT,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (usuario_id)
