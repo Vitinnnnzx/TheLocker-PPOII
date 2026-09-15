@@ -1,93 +1,47 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Perfil — The Locker</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
-  </head>
-  <body>
-    {% include "partials/nav.html" %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil — TheLocker</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body data-usuario-id="{{ usuario_id }}">
 
-    <div class="wrap page-body" style="max-width: 640px">
-      <div id="conteudo">
-        <p class="skeleton">Carregando perfil…</p>
-      </div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar-mount"></aside>
+    <header class="topbar" id="topbar-mount"></header>
+
+    <div class="content narrow">
+      <main class="main-col" style="max-width:680px;">
+        <div class="profile-cover"></div>
+        <div class="card profile-card" id="profile-card">
+          <div class="loading-row">Carregando perfil...</div>
+        </div>
+
+        <div class="tab-row">
+          <button class="tab active" data-tab="postagens">Postagens</button>
+          <button class="tab" data-tab="seguidores">Seguidores</button>
+          <button class="tab" data-tab="seguindo">Seguindo</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-postagens">
+          <div class="loading-row">Carregando postagens...</div>
+        </div>
+        <div class="tab-panel" id="tab-seguidores">
+          <div class="loading-row">Carregando seguidores...</div>
+        </div>
+        <div class="tab-panel" id="tab-seguindo">
+          <div class="loading-row">Carregando...</div>
+        </div>
+      </main>
     </div>
+  </div>
 
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-    <script>
-      Locker.initNav();
-      const usuarioId = {{ usuario_id }};
-      const conteudo = document.getElementById("conteudo");
-
-      async function carregar() {
-        // GET /perfil/usuario/<id>/dados
-        const { ok, data: u } = await Locker.api(`/perfil/usuario/${usuarioId}/dados`);
-
-        if (!ok) {
-          conteudo.innerHTML = `<div class="empty-state"><strong>Perfil não encontrado</strong></div>`;
-          return;
-        }
-
-        const { data: eu } = await Locker.api("/usuario");
-        const souEu = eu && eu.id === usuarioId;
-
-        let seguindo = false;
-        if (!souEu) {
-          const r = await Locker.api(`/perfil/seguindo/${usuarioId}`);
-          seguindo = r.ok && r.data.seguindo;
-        }
-
-        const foto = u.foto
-          ? `<img class="avatar" src="${Locker.escapeHtml(u.foto)}" alt="">`
-          : `<div class="avatar">${Locker.initials(u.nome)}</div>`;
-
-        const localTxt = [u.cidade, u.estado].filter(Boolean).join(" / ");
-        const esporteTxt = [u.modalidade, u.posicao].filter(Boolean).join(" · ");
-
-        conteudo.innerHTML = `
-          <div class="profile-head">
-            ${foto}
-            <div>
-              <div class="profile-name">
-                <h2 style="margin:0">${Locker.escapeHtml(u.nome)}</h2>
-                <span class="tag tipo-${u.tipo}">${Locker.tipoLabel(u.tipo)}</span>
-              </div>
-              ${localTxt ? `<p style="margin:2px 0 0">${Locker.escapeHtml(localTxt)}</p>` : ""}
-              ${esporteTxt ? `<p style="margin:2px 0 0">${Locker.escapeHtml(esporteTxt)}</p>` : ""}
-              ${u.bio ? `<p class="profile-bio">${Locker.escapeHtml(u.bio)}</p>` : ""}
-              <div class="profile-stats">
-                <div class="stat"><b>${u.seguidores}</b><span>seguidores</span></div>
-                <div class="stat"><b>${u.seguindo}</b><span>seguindo</span></div>
-              </div>
-            </div>
-            ${souEu ? "" : `
-              <div class="profile-actions">
-                <button class="btn ${seguindo ? "btn-ghost" : "btn-primary"} btn-sm" type="button" data-seguir>${seguindo ? "Deixar de seguir" : "Seguir"}</button>
-              </div>`}
-          </div>`;
-
-        const btn = document.querySelector("[data-seguir]");
-        if (btn) {
-          btn.addEventListener("click", async () => {
-            const seguindoAgora = btn.textContent.trim() === "Deixar de seguir";
-            // POST/DELETE /perfil/seguir/<id>
-            const { ok } = await Locker.api(`/perfil/seguir/${usuarioId}`, seguindoAgora ? "DELETE" : "POST");
-            if (ok) carregar();
-          });
-        }
-      }
-
-      carregar();
-    </script>
-  </body>
+  <script src="/static/js/icons.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/nav.js"></script>
+  <script src="/static/js/posts.js"></script>
+  <script src="/static/js/perfil-usuario.js"></script>
+</body>
 </html>
