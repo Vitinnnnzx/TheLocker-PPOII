@@ -18,7 +18,7 @@ source .venv/bin/activate
 ## 2. Dependências
 
 ```bash
-pip install flask flask-login psycopg2-binary python-dotenv werkzeug
+pip install -r requirements.txt
 ```
 
 ## 3. Banco de dados
