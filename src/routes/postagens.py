@@ -58,59 +58,41 @@ def criar_postagem():
         conn.close()
 
 
-@postagens.route("/postagens", methods=["GET"])
-def pegar_postagens():
-
+@postagens.route("/usuario", methods=["GET"])
+@login_required
+def pegar_usuario2():
     conn = get_connection()
     cursor = conn.cursor()
 
     try:
-        cursor.execute(
-            """
-            SELECT
-                p.id,
-                p.texto,
-                p.imagem,
-                p.data_criacao,
-                u.id,
-                u.nome,
-                u.tipo,
-                COALESCE(a.foto, t.escudo) AS foto
-            FROM publicacao p
-            JOIN usuario u ON p.usuario_id = u.id
+        cursor.execute("""
+            SELECT COALESCE(a.foto, t.escudo) AS foto
+            FROM usuario u
             LEFT JOIN atleta a ON a.usuario_id = u.id
             LEFT JOIN time t ON t.usuario_id = u.id
-            ORDER BY p.data_criacao DESC
-            """
-        )
-
-        postagens = cursor.fetchall()
-
-        resultado = []
-
-        for p in postagens:
-            resultado.append({
-                "id": p[0],
-                "texto": p[1],
-                "imagem": p[2],
-                "data_criacao": p[3],
-                "usuario": {
-                    "id": p[4],
-                    "nome": p[5],
-                    "tipo": p[6],
-                    "foto": p[7]
-                }
-            })
-
-        return jsonify(resultado), 200
-
-    except Exception as erro:
-
-        print(erro)
+            WHERE u.id = %s
+        """, (current_user.id,))
+        
+        resultado = cursor.fetchone()
+        foto = resultado[0] if resultado else None
 
         return jsonify({
-            "erro": "Erro ao buscar postagens."
-        }), 500
+            "id": current_user.id,
+            "nome": current_user.nome,
+            "email": current_user.email,
+            "tipo": current_user.tipo,
+            "foto": foto
+        }), 200
+
+    except Exception as erro:
+        print(f"Erro ao buscar foto do usuário: {erro}")
+        return jsonify({
+            "id": current_user.id,
+            "nome": current_user.nome,
+            "email": current_user.email,
+            "tipo": current_user.tipo,
+            "foto": None
+        }), 200
 
     finally:
         cursor.close()
