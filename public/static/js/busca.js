@@ -1,77 +1,165 @@
 const urlParams = new URLSearchParams(window.location.search);
-const textoBusca = urlParams.get('texto') || '';
+let textoBusca = urlParams.get('texto') || '';
+let modalidadeAtiva = '';
+let posicaoAtiva = '';
+
+const grid = document.getElementById('search-results-grid');
 const infoEl = document.getElementById('busca-info');
 
 init();
 
 async function init() {
   await montarShellOpcional();
-  ligarTabs();
-
-  if (!textoBusca) {
-    infoEl.textContent = 'Nenhum termo de pesquisa inserido.';
-    document.getElementById('lista-todos').innerHTML = `<div class="empty-state"><h3>Pesquisa vazia</h3><p>Introduza um nome para pesquisar.</p></div>`;
-    return;
-  }
-
-  infoEl.textContent = `A mostrar resultados para "${escapeHTML(textoBusca)}"`;
-
-  try {
-    const dados = await API.buscar(textoBusca);
-    renderResultados(dados);
-  } catch (e) {
-    document.getElementById('lista-todos').innerHTML = `<div class="empty-state"><h3>Erro na pesquisa</h3><p>${escapeHTML(e.message)}</p></div>`;
-  }
+  ligarFiltros();
+  ligarViewToggles();
+  await executarBusca();
 }
 
-function ligarTabs() {
-  document.querySelectorAll(".tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
-      document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
-      tab.classList.add("active");
-      document.getElementById(`tab-${tab.dataset.tab}`).classList.add("active");
-    });
+function ligarFiltros() {
+  const containerMod = document.getElementById('filter-modalidade');
+  const containerPos = document.getElementById('filter-posicao');
+  const btnReset = document.getElementById('btn-reset-filtros');
+
+  containerMod.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('filter-btn')) return;
+    document.querySelectorAll('#filter-modalidade .filter-btn').forEach(b => b.classList.remove('active'));
+    
+    if (modalidadeAtiva === e.target.dataset.value) {
+      modalidadeAtiva = ''; // Desmarca
+    } else {
+      e.target.classList.add('active');
+      modalidadeAtiva = e.target.dataset.value;
+    }
+    executarBusca();
+  });
+
+  containerPos.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('filter-btn')) return;
+    document.querySelectorAll('#filter-posicao .filter-btn').forEach(b => b.classList.remove('active'));
+    
+    if (posicaoAtiva === e.target.dataset.value) {
+      posicaoAtiva = ''; 
+    } else {
+      e.target.classList.add('active');
+      posicaoAtiva = e.target.dataset.value;
+    }
+    executarBusca();
+  });
+
+  btnReset.addEventListener('click', () => {
+    modalidadeAtiva = '';
+    posicaoAtiva = '';
+    textoBusca = '';
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const inputNav = document.getElementById('nav-search-input');
+    if (inputNav) inputNav.value = '';
+    window.history.replaceState({}, '', '/pesquisa');
+    executarBusca();
   });
 }
 
-function renderResultados(dados) {
-  const usuarios = (dados.usuarios || []).filter(u => u.tipo !== "time");
-  const times = dados.times || [];
+function ligarViewToggles() {
+  const btnGrid = document.getElementById('btn-view-grid');
+  const btnList = document.getElementById('btn-view-list');
 
-  const renderCardUsuario = (u) => `
-    <a class="list-row" href="/perfil/usuario/${u.id}">
-      ${avatarHTML(u.nome, null, { size: "sm" })}
-      <span class="name">${escapeHTML(u.nome)}</span>
-      <span class="tag-pill blue" style="margin-left:auto;">${escapeHTML(tipoLabel(u.tipo))}</span>
-    </a>
-  `;
+  btnGrid.addEventListener('click', () => {
+    grid.classList.remove('list-view');
+    btnGrid.classList.add('active');
+    btnList.classList.remove('active');
+  });
 
-  const renderCardTime = (t) => `
-    <a class="list-row" href="/perfil/time/${t.id}">
-      ${avatarHTML(t.nome, t.escudo, { size: "sm", team: true })}
-      <div class="name" style="flex:1; margin-left:10px;">
-        <div style="font-weight:600; font-size:13.5px;">${escapeHTML(t.nome)}</div>
-        <div style="font-size:11.5px; color:var(--text-dimmer);">${escapeHTML([t.cidade, t.estado].filter(Boolean).join(" · "))}</div>
-      </div>
-      <span class="tag-pill teal" style="margin-left:auto;">Equipa</span>
-    </a>
-  `;
+  btnList.addEventListener('click', () => {
+    grid.classList.add('list-view');
+    btnList.classList.add('active');
+    btnGrid.classList.remove('active');
+  });
+}
 
-  const htmlUsuarios = usuarios.length ? `<div class="card" style="display:flex; flex-direction:column;">${usuarios.map(renderCardUsuario).join("")}</div>` : `<div class="empty-state"><p>Nenhum utilizador encontrado.</p></div>`;
-  const htmlTimes = times.length ? `<div class="card" style="display:flex; flex-direction:column;">${times.map(renderCardTime).join("")}</div>` : `<div class="empty-state"><p>Nenhuma equipa encontrada.</p></div>`;
+function calcularIdade(dataNascimento) {
+  if (!dataNascimento) return "Idade não informada";
+  const nasc = new Date(dataNascimento);
+  const hoje = new Date();
+  let idade = hoje.getFullYear() - nasc.getFullYear();
+  const m = hoje.getMonth() - nasc.getMonth();
+  if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
+  return `${idade} anos`;
+}
 
-  let htmlTodos = "";
-  if (usuarios.length === 0 && times.length === 0) {
-    htmlTodos = `<div class="empty-state"><h3>Sem resultados</h3><p>Não encontrámos nada para "${escapeHTML(textoBusca)}".</p></div>`;
-  } else {
-    htmlTodos = `<div class="card" style="display:flex; flex-direction:column;">` + 
-                (usuarios.length ? usuarios.map(renderCardUsuario).join("") : "") + 
-                (times.length ? times.map(renderCardTime).join("") : "") + 
-                `</div>`;
+async function executarBusca() {
+  grid.innerHTML = `<div class="loading-row">A procurar...</div>`;
+  infoEl.textContent = `A aplicar filtros...`;
+
+  try {
+    // Montar URL com filtros
+    let params = new URLSearchParams();
+    if (textoBusca) params.append("texto", textoBusca);
+    if (modalidadeAtiva) params.append("modalidade", modalidadeAtiva);
+    if (posicaoAtiva) params.append("posicao", posicaoAtiva);
+
+    const res = await fetch(`/buscar?${params.toString()}`);
+    if (!res.ok) throw new Error("Falha na pesquisa");
+    const dados = await res.json();
+    
+    renderResultados(dados.usuarios, dados.times);
+  } catch (e) {
+    grid.innerHTML = `<div class="empty-state"><h3>Erro na pesquisa</h3><p>${escapeHTML(e.message)}</p></div>`;
+  }
+}
+
+function renderResultados(atletas, times) {
+  const total = atletas.length + times.length;
+  
+  if (total === 0) {
+    infoEl.textContent = "Nenhum resultado encontrado.";
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column: 1 / -1;">
+        <h3>Sem correspondências</h3>
+        <p>Tente remover alguns filtros ou pesquisar por outro nome.</p>
+      </div>`;
+    return;
   }
 
-  document.getElementById('lista-todos').innerHTML = htmlTodos;
-  document.getElementById('lista-atletas').innerHTML = htmlUsuarios;
-  document.getElementById('lista-times').innerHTML = htmlTimes;
+  infoEl.textContent = `A exibir ${total} resultado(s)`;
+
+  const htmlAtletas = atletas.map(a => `
+    <article class="adv-card">
+      <div class="adv-card-header">
+        <a href="/perfil/usuario/${a.id}">${avatarHTML(a.nome, a.foto)}</a>
+        <div class="adv-card-info">
+          <a href="/perfil/usuario/${a.id}" class="name" style="display:block; color:inherit;">${escapeHTML(a.nome)}</a>
+          <div class="specs">
+            ${escapeHTML([a.modalidade, a.posicao].filter(Boolean).join(" · ") || "Atleta")}
+          </div>
+        </div>
+      </div>
+      <div class="adv-card-metrics">
+        <div><span>Idade</span><strong>${calcularIdade(a.data_nascimento)}</strong></div>
+        <div><span>Local</span><strong>${escapeHTML(a.estado || a.cidade || "Não informado")}</strong></div>
+      </div>
+      <div class="adv-card-actions">
+        <a href="/perfil/usuario/${a.id}" class="btn btn-outline">Ver Perfil</a>
+        <button class="btn btn-primary" onclick="alert('Funcionalidade de chat em desenvolvimento (Prioridade 6)')">Mensagem</button>
+      </div>
+    </article>
+  `).join("");
+
+  const htmlTimes = times.map(t => `
+    <article class="adv-card">
+      <div class="adv-card-header">
+        <a href="/perfil/time/${t.id}">${avatarHTML(t.nome, t.escudo, { team: true })}</a>
+        <div class="adv-card-info">
+          <a href="/perfil/time/${t.id}" class="name" style="display:block; color:inherit;">${escapeHTML(t.nome)}</a>
+          <div class="specs">Equipa Oficial</div>
+        </div>
+      </div>
+      <div class="adv-card-metrics">
+        <div><span>Base</span><strong>${escapeHTML([t.cidade, t.estado].filter(Boolean).join(" - ") || "Não informada")}</strong></div>
+      </div>
+      <div class="adv-card-actions">
+        <a href="/perfil/time/${t.id}" class="btn btn-primary">Ver Plantel</a>
+      </div>
+    </article>
+  `).join("");
+
+  grid.innerHTML = htmlAtletas + htmlTimes;
 }
