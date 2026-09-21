@@ -39,3 +39,7 @@ def criar_time():
 @login_required 
 def page_time():
     return render_template("time.html")
+
+@app_pages.route("/pesquisa")
+def page_pesquisa():
+    return render_template("busca.html")

@@ -79,7 +79,8 @@ const Locker = {
       searchForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const q = searchForm.querySelector("input").value.trim();
-        if (q) location.href = "/buscar?texto=" + encodeURIComponent(q);
+        // Redireciona para a página HTML em vez da rota JSON da API
+        if (q) location.href = "/pesquisa?texto=" + encodeURIComponent(q);
       });
     }
   },

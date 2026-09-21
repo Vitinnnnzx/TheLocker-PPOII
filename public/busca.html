@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultados da Pesquisa — TheLocker</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar-mount"></aside>
+    <header class="topbar" id="topbar-mount"></header>
+
+    <div class="content narrow">
+      <main class="main-col" style="max-width:680px;">
+        <h1 style="font-size:22px; margin-bottom:4px;">Resultados da pesquisa</h1>
+        <p style="color:var(--text-dim); font-size:13.5px; margin:0 0 22px;" id="busca-info">A procurar...</p>
+
+        <div class="tab-row">
+          <button class="tab active" data-tab="todos">Todos</button>
+          <button class="tab" data-tab="atletas">Atletas & Recrutadores</button>
+          <button class="tab" data-tab="times">Equipas</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-todos">
+          <div id="lista-todos"><div class="loading-row">A carregar resultados...</div></div>
+        </div>
+        <div class="tab-panel" id="tab-atletas">
+          <div id="lista-atletas"></div>
+        </div>
+        <div class="tab-panel" id="tab-times">
+          <div id="lista-times"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/static/js/icons.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/nav.js"></script>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/busca.js"></script>
+</body>
+</html>
