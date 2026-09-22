@@ -1,46 +1,50 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Time — TheLocker</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body data-time-id="{{ time_id }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time — TheLocker</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      rel="shortcut icon"
+      href="/public//static/logo.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body data-time-id="{{ time_id }}">
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar-mount"></aside>
+      <header class="topbar" id="topbar-mount"></header>
 
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar-mount"></aside>
-    <header class="topbar" id="topbar-mount"></header>
+      <div class="content narrow">
+        <main class="main-col" style="max-width: 680px">
+          <div class="profile-cover"></div>
+          <div class="card profile-card" id="team-card">
+            <div class="loading-row">Carregando time...</div>
+          </div>
 
-    <div class="content narrow">
-      <main class="main-col" style="max-width:680px;">
-        <div class="profile-cover"></div>
-        <div class="card profile-card" id="team-card">
-          <div class="loading-row">Carregando time...</div>
-        </div>
+          <div class="tab-row">
+            <button class="tab active" data-tab="elenco">Elenco atual</button>
+            <button class="tab" data-tab="historico">Histórico</button>
+            <button class="tab" data-tab="seguidores">Seguidores</button>
+          </div>
 
-        <div class="tab-row">
-          <button class="tab active" data-tab="elenco">Elenco atual</button>
-          <button class="tab" data-tab="historico">Histórico</button>
-          <button class="tab" data-tab="seguidores">Seguidores</button>
-        </div>
-
-        <div class="tab-panel active" id="tab-elenco">
-          <div class="loading-row">Carregando elenco...</div>
-        </div>
-        <div class="tab-panel" id="tab-historico">
-          <div class="loading-row">Carregando histórico...</div>
-        </div>
-        <div class="tab-panel" id="tab-seguidores">
-          <div class="loading-row">Carregando seguidores...</div>
-        </div>
-      </main>
+          <div class="tab-panel active" id="tab-elenco">
+            <div class="loading-row">Carregando elenco...</div>
+          </div>
+          <div class="tab-panel" id="tab-historico">
+            <div class="loading-row">Carregando histórico...</div>
+          </div>
+          <div class="tab-panel" id="tab-seguidores">
+            <div class="loading-row">Carregando seguidores...</div>
+          </div>
+        </main>
+      </div>
     </div>
-  </div>
 
-  <script src="/static/js/icons.js"></script>
-  <script src="/static/js/api.js"></script>
-  <script src="/static/js/nav.js"></script>
-  <script src="/static/js/perfil-time.js"></script>
-</body>
+    <script src="/static/js/icons.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/nav.js"></script>
+    <script src="/static/js/perfil-time.js"></script>
+  </body>
 </html>

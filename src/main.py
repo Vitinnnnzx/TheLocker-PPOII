@@ -8,6 +8,7 @@ from .routes.busca import busca
 from .routes.perfil import perfil
 from .routes.times import times
 from .routes.auth.utils.LoginManager import login_manager
+from .routes.bot import bot_bp
 from .errors.register_errors import register_error_handlers 
 load_dotenv()
 
@@ -20,6 +21,7 @@ app.register_blueprint(postagens)
 app.register_blueprint(busca)
 app.register_blueprint(perfil)
 app.register_blueprint(times)
+app.register_blueprint(bot_bp)
 register_error_handlers(app)
 
 login_manager.init_app(app)
