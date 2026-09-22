@@ -1,9 +1,3 @@
-/**
- * Monta a sidebar + topbar padrão (dentro de #sidebar-mount / #topbar-mount),
- * preenche dados do usuário logado, liga a busca global e o menu do usuário.
- * Usado em todas as páginas autenticadas.
- */
-
 async function montarShell(activePage) {
   const sidebarMount = document.getElementById("sidebar-mount");
   const topbarMount = document.getElementById("topbar-mount");
@@ -86,11 +80,6 @@ async function montarShell(activePage) {
   return usuario;
 }
 
-/**
- * Variante para páginas públicas (perfil de outro usuário / time), que não
- * exigem login no backend. Mostra o shell completo se houver sessão ativa,
- * ou uma barra simples com "Entrar" caso contrário.
- */
 async function montarShellOpcional() {
   const sidebarMount = document.getElementById("sidebar-mount");
   const topbarMount = document.getElementById("topbar-mount");
@@ -131,18 +120,28 @@ async function carregarMeusTimesNaSidebar() {
       return;
     }
 
-    const cores = ["var(--accent)", "var(--teal)", "var(--blue)", "var(--orange)", "var(--purple)"];
+    const cores = [
+      "var(--accent)",
+      "var(--teal)",
+      "var(--blue)",
+      "var(--orange)",
+      "var(--purple)",
+    ];
 
     el.innerHTML = `
       <div class="sidebar-section-title">Meus times</div>
-      ${ativos.map((t, i) => `
+      ${ativos
+        .map(
+          (t, i) => `
         <a class="sidebar-team-row" href="/perfil/time/${t.id}">
           <span class="sidebar-team-dot" style="background:${cores[i % cores.length]}"></span>
           <div class="meta">
             <div class="n">${escapeHTML(t.nome)}</div>
           </div>
         </a>
-      `).join("")}
+      `,
+        )
+        .join("")}
     `;
   } catch (e) {
     el.innerHTML = "";
@@ -227,21 +226,29 @@ function ligarBusca() {
       return;
     }
 
-    const itensUsuarios = usuarios.map((u) => `
+    const itensUsuarios = usuarios
+      .map(
+        (u) => `
       <a class="search-result-item" href="/perfil/usuario/${u.id}">
         ${avatarHTML(u.nome, null, { size: "sm" })}
         <span>${escapeHTML(u.nome)}</span>
         <span class="tag">${escapeHTML(tipoLabel(u.tipo))}</span>
       </a>
-    `).join("");
+    `,
+      )
+      .join("");
 
-    const itensTimes = times.map((t) => `
+    const itensTimes = times
+      .map(
+        (t) => `
       <a class="search-result-item" href="/perfil/time/${t.id}">
         ${avatarHTML(t.nome, t.escudo, { size: "sm", team: true })}
         <span>${escapeHTML(t.nome)}</span>
         <span class="tag">Time</span>
       </a>
-    `).join("");
+    `,
+      )
+      .join("");
 
     results.innerHTML = itensUsuarios + itensTimes;
     results.classList.add("open");

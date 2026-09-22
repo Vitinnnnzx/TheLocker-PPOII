@@ -1,17 +1,9 @@
-/**
- * Renderização e interação de cards de postagem, compartilhada entre
- * inicio.html, perfil.html e perfil-usuario.html.
- *
- * `postagens` é o array de dados (mutado in-place ao curtir/comentar).
- * `interativo` liga curtir/comentar; usado quando os dados vêm de
- * /feed/postagens (autenticado, já traz curtidas/comentarios/curtiu).
- * Quando os dados vêm de /postagens (público), não há esses campos —
- * o card é renderizado só leitura.
- */
-
 function renderPostList(containerId, prefix, postagens, options) {
   const container = document.getElementById(containerId);
-  const opts = Object.assign({ emptyTitle: "Nenhuma publicação", emptyText: "", interativo: true }, options);
+  const opts = Object.assign(
+    { emptyTitle: "Nenhuma publicação", emptyText: "", interativo: true },
+    options,
+  );
 
   if (!postagens || postagens.length === 0) {
     container.innerHTML = `
@@ -22,7 +14,9 @@ function renderPostList(containerId, prefix, postagens, options) {
     return;
   }
 
-  container.innerHTML = postagens.map((p) => postCardHTML(p, prefix, opts.interativo)).join("");
+  container.innerHTML = postagens
+    .map((p) => postCardHTML(p, prefix, opts.interativo))
+    .join("");
 
   if (!opts.interativo) return;
 
@@ -31,10 +25,16 @@ function renderPostList(containerId, prefix, postagens, options) {
     if (!card) return;
 
     const likeBtn = card.querySelector(".like-btn");
-    if (likeBtn) likeBtn.addEventListener("click", () => toggleCurtir(p.id, prefix, postagens));
+    if (likeBtn)
+      likeBtn.addEventListener("click", () =>
+        toggleCurtir(p.id, prefix, postagens),
+      );
 
     const commentBtn = card.querySelector(".comment-toggle-btn");
-    if (commentBtn) commentBtn.addEventListener("click", () => toggleComentarios(p.id, prefix));
+    if (commentBtn)
+      commentBtn.addEventListener("click", () =>
+        toggleComentarios(p.id, prefix),
+      );
 
     const form = card.querySelector(".comment-form");
     if (form) {
@@ -72,9 +72,13 @@ function postCardHTML(p, prefix, interativo) {
       ${p.texto ? `<p class="post-text">${escapeHTML(p.texto)}</p>` : ""}
       ${p.imagem ? `<div class="post-image"><img src="${escapeHTML(p.imagem)}" alt="Imagem da publicação" loading="lazy"></div>` : ""}
 
-      ${temContadores ? `
+      ${
+        temContadores
+          ? `
         <div class="post-actions">
-          ${interativo ? `
+          ${
+            interativo
+              ? `
             <button class="post-action like-btn ${liked ? "liked" : ""}" data-liked="${liked}">
               ${liked ? ICONS.heartFilled : ICONS.heart}
               <span class="like-count">${p.curtidas ?? 0}</span>
@@ -83,12 +87,16 @@ function postCardHTML(p, prefix, interativo) {
               ${ICONS.comment}
               <span class="comment-count">${p.comentarios ?? 0}</span>
             </button>
-          ` : `
+          `
+              : `
             <span class="post-action" style="cursor:default;">${ICONS.heart}<span>${p.curtidas ?? 0}</span></span>
             <span class="post-action" style="cursor:default;">${ICONS.comment}<span>${p.comentarios ?? 0}</span></span>
-          `}
+          `
+          }
         </div>
-        ${interativo ? `
+        ${
+          interativo
+            ? `
           <div class="comments-panel" id="${prefix}-comments-${p.id}">
             <div class="comment-list"></div>
             <form class="comment-form">
@@ -96,8 +104,12 @@ function postCardHTML(p, prefix, interativo) {
               <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
             </form>
           </div>
-        ` : ""}
-      ` : ""}
+        `
+            : ""
+        }
+      `
+          : ""
+      }
     </article>
   `;
 }
@@ -111,7 +123,9 @@ async function toggleCurtir(postagemId, prefix, postagens) {
 
   btn.dataset.liked = String(!liked);
   btn.classList.toggle("liked", !liked);
-  btn.innerHTML = (!liked ? ICONS.heartFilled : ICONS.heart) + `<span class="like-count">${liked ? count - 1 : count + 1}</span>`;
+  btn.innerHTML =
+    (!liked ? ICONS.heartFilled : ICONS.heart) +
+    `<span class="like-count">${liked ? count - 1 : count + 1}</span>`;
 
   try {
     if (liked) {
@@ -127,7 +141,9 @@ async function toggleCurtir(postagemId, prefix, postagens) {
   } catch (e) {
     btn.dataset.liked = String(liked);
     btn.classList.toggle("liked", liked);
-    btn.innerHTML = (liked ? ICONS.heartFilled : ICONS.heart) + `<span class="like-count">${count}</span>`;
+    btn.innerHTML =
+      (liked ? ICONS.heartFilled : ICONS.heart) +
+      `<span class="like-count">${count}</span>`;
   }
 }
 
@@ -153,7 +169,9 @@ function renderComentarios(list, comentarios) {
     list.innerHTML = `<div class="loading-row">Nenhum comentário ainda.</div>`;
     return;
   }
-  list.innerHTML = comentarios.map((c) => `
+  list.innerHTML = comentarios
+    .map(
+      (c) => `
     <div class="comment-row">
       ${avatarHTML(c.usuario.nome, null, { size: "sm" })}
       <div class="bubble">
@@ -161,7 +179,9 @@ function renderComentarios(list, comentarios) {
         <div>${escapeHTML(c.texto)}</div>
       </div>
     </div>
-  `).join("");
+  `,
+    )
+    .join("");
 }
 
 async function enviarComentario(postagemId, texto, input, prefix, postagens) {
