@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensagens — TheLocker</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar-mount"></aside>
+    <header class="topbar" id="topbar-mount"></header>
+
+    <div class="content chat-content">
+      <main class="chat-app-container card">
+        
+        <!-- Lista de Contactos -->
+        <div class="chat-contacts">
+          <div class="chat-contacts-header">
+            <h3>Mensagens</h3>
+          </div>
+          <div class="contact-list" id="contact-list">
+            <div class="loading-row">A carregar conversas...</div>
+          </div>
+        </div>
+
+        <!-- Janela de Conversa -->
+        <div class="chat-window">
+          <div class="chat-window-header" id="chat-active-header">
+            <div class="empty-state" style="padding:10px;">Selecione uma conversa</div>
+          </div>
+          <div class="chat-messages" id="direct-messages">
+            <div class="empty-state">As suas mensagens aparecerão aqui.</div>
+          </div>
+          <form class="chat-input-area" id="direct-chat-form" style="display:none;">
+            <input type="text" id="direct-chat-input" placeholder="Escreva uma mensagem..." autocomplete="off">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+          </form>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="/static/js/icons.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/nav.js"></script>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/chat.js"></script>
+</body>
+</html>

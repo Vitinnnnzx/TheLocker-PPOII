@@ -43,3 +43,13 @@ def page_time():
 @app_pages.route("/pesquisa")
 def page_pesquisa():
     return render_template("busca.html")
+
+@app_pages.route("/clibs")
+@login_required
+def page_clibs():
+    return render_template("clibs.html")
+
+@app_pages.route("/chat")
+@login_required
+def page_chat():
+    return render_template("chat.html")

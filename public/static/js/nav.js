@@ -35,6 +35,10 @@ async function montarShell(activePage) {
       <a class="nav-link ${activePage === "config" ? "active" : ""}" href="/config">
         ${ICONS.config}<span>Configurações</span>
       </a>
+      <!-- Link para o CLIBS -->
+      <a class="nav-link ${activePage === "clibs" ? "active" : ""}" href="/clibs">
+        ${ICONS.comment}<span>CLIBS IA</span>
+      </a>
     </nav>
 
     <button class="btn-post" id="btn-nova-postagem" type="button">
