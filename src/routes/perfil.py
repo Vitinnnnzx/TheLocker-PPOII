@@ -3,6 +3,14 @@ from flask_login import login_required, current_user
 from .auth.db.database import get_connection
 from werkzeug.security import generate_password_hash
 
+MODALIDADES_PERMITIDAS = {
+    "Futebol": ["Goleiro", "Zagueiro", "Lateral", "Meio-campista", "Ponta", "Atacante"],
+    "Futsal": ["Goleiro", "Fixo", "Ala", "Pivô"],
+    "Basquete": ["Armador", "Ala-armador", "Ala", "Ala-pivô", "Pivô"],
+    "Vôlei": ["Levantador", "Oposto", "Ponteiro", "Central", "Líbero"],
+    "Handebol": ["Goleiro", "Ponta", "Armador", "Central", "Pivô"]
+}
+
 perfil = Blueprint("perfil", __name__)
 
 
@@ -509,6 +517,13 @@ def atualizar_perfil():
     modalidade = dados.get("modalidade")
     posicao = dados.get("posicao")
     senha = dados.get("senha")
+    # Validação rigorosa
+    if modalidade and modalidade not in MODALIDADES_PERMITIDAS:
+        return jsonify({"erro": "Modalidade não suportada pelo sistema."}), 400
+        
+    if posicao and modalidade:
+        if posicao not in MODALIDADES_PERMITIDAS[modalidade]:
+            return jsonify({"erro": f"Posição '{posicao}' inválida para a modalidade '{modalidade}'."}), 400
 
     conn = get_connection()
     cursor = conn.cursor()

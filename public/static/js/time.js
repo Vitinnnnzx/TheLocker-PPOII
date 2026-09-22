@@ -261,6 +261,16 @@ function renderEditar() {
         </div>
         <div class="field-row">
           <div class="field">
+  <label for="e-modalidade">Modalidade</label>
+  <select id="e-modalidade">
+    <option value="">Selecione a modalidade</option>
+    <option value="Futebol" ${timeDados.modalidade === 'Futebol' ? 'selected' : ''}>Futebol</option>
+    <option value="Futsal" ${timeDados.modalidade === 'Futsal' ? 'selected' : ''}>Futsal</option>
+    <option value="Basquete" ${timeDados.modalidade === 'Basquete' ? 'selected' : ''}>Basquete</option>
+    <option value="Vôlei" ${timeDados.modalidade === 'Vôlei' ? 'selected' : ''}>Vôlei</option>
+    <option value="Handebol" ${timeDados.modalidade === 'Handebol' ? 'selected' : ''}>Handebol</option>
+  </select>
+</div>
             <label for="e-cidade">Cidade</label>
             <input type="text" id="e-cidade" value="${escapeHTML(timeDados.cidade || "")}">
           </div>

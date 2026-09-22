@@ -4,6 +4,14 @@ const successBox = document.getElementById("form-success");
 const submitBtn = document.getElementById("submit-btn");
 const camposAtleta = document.getElementById("campos-atleta");
 
+const POSICOES_POR_MODALIDADE = {
+  "Futebol": ["Goleiro", "Defensor", "Lateral", "Meio-campista", "Ala", "Atacante"],
+  "Futsal": ["Goleiro", "Fixo", "Ala", "Pivô"],
+  "Basquete": ["Armador", "Ala-armador", "Ala", "Ala-pivô", "Pivô"],
+  "Vôlei": ["Levantador", "Oposto", "Ponteiro", "Central", "Líbero"],
+  "Handebol": ["Goleiro", "Ponta", "Armador", "Central", "Pivô"]
+};
+
 init();
 
 async function init() {
@@ -18,6 +26,18 @@ async function init() {
     try {
       const dados = await API.perfilDados();
       document.getElementById("bio").value = dados.bio || "";
+      const modalidadeSelect = document.getElementById("modalidade");
+const posicaoSelect = document.getElementById("posicao");
+
+modalidadeSelect.addEventListener("change", atualizarPosicoes);
+
+if (dados.modalidade) {
+  modalidadeSelect.value = dados.modalidade;
+  atualizarPosicoes();
+  if (dados.posicao) {
+    posicaoSelect.value = dados.posicao;
+  }
+}
       document.getElementById("modalidade").value = dados.modalidade || "";
       document.getElementById("posicao").value = dados.posicao || "";
       document.getElementById("cidade").value = dados.cidade || "";
@@ -32,6 +52,28 @@ async function init() {
   form.addEventListener("submit", salvar);
 }
 
+function atualizarPosicoes() {
+  const modalidade = document.getElementById("modalidade").value;
+  const posicaoSelect = document.getElementById("posicao");
+  
+  posicaoSelect.innerHTML = "";
+  
+  if (!modalidade || !POSICOES_POR_MODALIDADE[modalidade]) {
+    posicaoSelect.innerHTML = '<option value="">Selecione a modalidade primeiro</option>';
+    posicaoSelect.disabled = true;
+    return;
+  }
+
+  posicaoSelect.disabled = false;
+  posicaoSelect.innerHTML = '<option value="">Selecione a posição</option>';
+  
+  POSICOES_POR_MODALIDADE[modalidade].forEach(pos => {
+    const opt = document.createElement("option");
+    opt.value = pos;
+    opt.textContent = pos;
+    posicaoSelect.appendChild(opt);
+  });
+}
 async function salvar(e) {
   e.preventDefault();
   errorBox.classList.remove("visible");

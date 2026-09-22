@@ -24,7 +24,24 @@
           <p class="card-title">Conta</p>
           <form id="config-form">
             <div class="field-row">
-              <div class="field">
+  <div class="field">
+    <label for="modalidade">Modalidade</label>
+    <select id="modalidade">
+      <option value="">Selecione a modalidade</option>
+      <option value="Futebol">Futebol</option>
+      <option value="Futsal">Futsal</option>
+      <option value="Basquete">Basquete</option>
+      <option value="Vôlei">Vôlei</option>
+      <option value="Handebol">Handebol</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="posicao">Posição</label>
+    <select id="posicao" disabled>
+      <option value="">Selecione a modalidade primeiro</option>
+    </select>
+  </div>
+</div>
                 <label for="nome">Nome</label>
                 <input type="text" id="nome" name="nome">
               </div>

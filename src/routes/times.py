@@ -4,6 +4,8 @@ from werkzeug.security import generate_password_hash
 
 from ..routes.auth.db.database import get_connection
 
+MODALIDADES_PERMITIDAS = ["Futebol", "Futsal", "Basquete", "Vôlei", "Handebol"]
+
 times = Blueprint("times", __name__)
 
 @times.route("/time", methods=["POST"])
@@ -522,6 +524,10 @@ def atualizar_time(time_id):
     cidade = dados.get("cidade")
     estado = dados.get("estado")
     escudo = dados.get("escudo")
+    modalidade = dados.get("modalidade")
+    
+    if modalidade and modalidade not in MODALIDADES_PERMITIDAS:
+        return jsonify({"erro": "Modalidade não suportada pelo sistema."}), 400
 
     if estado and len(estado) != 2:
         return jsonify({
