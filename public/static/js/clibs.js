@@ -25,7 +25,7 @@ async function init() {
 function adicionarMensagem(texto, remetente) {
   const row = document.createElement("div");
   row.className = `msg-row ${remetente}`;
-  row.innerHTML = `<div class="msg-bubble">${escapeHTML(texto)}</div>`;
+  row.innerHTML = `<div class="msg-bubble">${texto}</div>`;
   msgsContainer.appendChild(row);
   scrollToBottom();
 }
