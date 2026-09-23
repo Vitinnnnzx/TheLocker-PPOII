@@ -1,87 +1,117 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Feed — TheLocker</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feed — TheLocker</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      rel="shortcut icon"
+      href="./static/img/FaviconTlock.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar-mount"></aside>
+      <header class="topbar" id="topbar-mount"></header>
 
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar-mount"></aside>
-    <header class="topbar" id="topbar-mount"></header>
+      <div class="content">
+        <main class="main-col">
+          <div
+            class="card strip-card"
+            id="following-strip-card"
+            style="display: none"
+          >
+            <div class="avatar-strip" id="following-strip"></div>
+          </div>
 
-    <div class="content">
-      <main class="main-col">
-
-        <div class="card strip-card" id="following-strip-card" style="display:none;">
-          <div class="avatar-strip" id="following-strip"></div>
-        </div>
-
-        <div class="card" id="composer-card">
-          <div class="composer">
-            <div id="composer-avatar"></div>
-            <div class="body">
-              <textarea id="composer-texto" placeholder="Compartilhe uma conquista, treino ou atualização..." maxlength="500"></textarea>
-              <div class="composer-footer">
-                <div class="img-field">
-                  <span id="composer-img-icon"></span>
-                  <input type="text" id="composer-imagem" placeholder="URL de imagem (opcional)">
+          <div class="card" id="composer-card">
+            <div class="composer">
+              <div id="composer-avatar"></div>
+              <div class="body">
+                <textarea
+                  id="composer-texto"
+                  placeholder="Compartilhe uma conquista, treino ou atualização..."
+                  maxlength="500"
+                ></textarea>
+                <div class="composer-footer">
+                  <div class="img-field">
+                    <span id="composer-img-icon"></span>
+                    <input
+                      type="text"
+                      id="composer-imagem"
+                      placeholder="URL de imagem (opcional)"
+                    />
+                  </div>
+                  <button class="btn btn-primary btn-sm" id="composer-btn">
+                    Publicar
+                  </button>
                 </div>
-                <button class="btn btn-primary btn-sm" id="composer-btn">Publicar</button>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="tab-row">
-          <button class="tab active" data-tab="voce">Para você</button>
-          <button class="tab" data-tab="seguindo">Seguindo</button>
-          <button class="tab" data-tab="times">Times</button>
-        </div>
-
-        <div class="tab-panel active" id="tab-voce">
-          <div id="feed-list-voce"><div class="loading-row">Carregando feed...</div></div>
-        </div>
-        <div class="tab-panel" id="tab-seguindo">
-          <div id="feed-list-seguindo"></div>
-        </div>
-        <div class="tab-panel" id="tab-times">
-          <div id="feed-list-times"></div>
-        </div>
-      </main>
-
-      <aside class="aside-col">
-        <div class="card">
-          <p class="card-title">Sua rede</p>
-          <div class="stat-grid cols-2" id="rede-stats">
-            <div class="stat-tile"><b>—</b><span>Seguidores</span></div>
-            <div class="stat-tile"><b>—</b><span>Seguindo</span></div>
+          <div class="tab-row">
+            <button class="tab active" data-tab="voce">Para você</button>
+            <button class="tab" data-tab="seguindo">Seguindo</button>
+            <button class="tab" data-tab="times">Times</button>
           </div>
-        </div>
 
-        <div class="card">
-          <p class="card-title">Novos seguidores</p>
-          <div id="novos-seguidores"><div class="loading-row">Carregando...</div></div>
-        </div>
+          <div class="tab-panel active" id="tab-voce">
+            <div id="feed-list-voce">
+              <div class="loading-row">Carregando feed...</div>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-seguindo">
+            <div id="feed-list-seguindo"></div>
+          </div>
+          <div class="tab-panel" id="tab-times">
+            <div id="feed-list-times"></div>
+          </div>
+        </main>
 
-        <div class="card">
-          <p class="card-title">Sobre o feed</p>
-          <p style="font-size:12.5px; color:var(--text-dim); line-height:1.6; margin:0;">
-            "Para você" traz publicações de toda a plataforma. Use "Seguindo" e "Times"
-            para filtrar o que você já acompanha.
-          </p>
-        </div>
-      </aside>
+        <aside class="aside-col">
+          <div class="card">
+            <p class="card-title">Sua rede</p>
+            <div class="stat-grid cols-2" id="rede-stats">
+              <div class="stat-tile"><b>—</b><span>Seguidores</span></div>
+              <div class="stat-tile"><b>—</b><span>Seguindo</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <p class="card-title">Novos seguidores</p>
+            <div id="novos-seguidores">
+              <div class="loading-row">Carregando...</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <p class="card-title">Sobre o feed</p>
+            <p
+              style="
+                font-size: 12.5px;
+                color: var(--text-dim);
+                line-height: 1.6;
+                margin: 0;
+              "
+            >
+              "Para você" traz publicações de toda a plataforma. Use "Seguindo"
+              e "Times" para filtrar o que você já acompanha.
+            </p>
+          </div>
+        </aside>
+      </div>
     </div>
-  </div>
 
-  <script src="/static/js/icons.js"></script>
-  <script>document.getElementById("composer-img-icon").innerHTML = ICONS.image;</script>
-  <script src="/static/js/api.js"></script>
-  <script src="/static/js/nav.js"></script>
-  <script src="/static/js/posts.js"></script>
-  <script src="/static/js/inicio.js"></script>
-</body>
+    <script src="/static/js/icons.js"></script>
+    <script>
+      document.getElementById("composer-img-icon").innerHTML = ICONS.image;
+    </script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/nav.js"></script>
+    <script src="/static/js/posts.js"></script>
+    <script src="/static/js/inicio.js"></script>
+  </body>
 </html>

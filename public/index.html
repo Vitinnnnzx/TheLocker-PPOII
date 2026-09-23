@@ -1,74 +1,93 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TheLocker — Conecte-se ao mercado esportivo</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-
-  <nav class="landing-topbar">
-    <a class="brand" href="/"><span class="brand-mark"></span>THE LOCKER</a>
-    <div class="links">
-      <a class="btn btn-outline" href="/login">Entrar</a>
-      <a class="btn btn-primary" href="/criar-conta">Criar conta</a>
-    </div>
-  </nav>
-
-  <section class="landing-hero">
-    <span class="eyebrow">Rede social de performance esportiva</span>
-    <h1>Sua performance merece <span class="accent">ser vista</span>.</h1>
-    <p>
-      TheLocker conecta atletas a técnicos, olheiros e clubes em um só lugar —
-      sem depender de redes sociais genéricas para mostrar seu jogo.
-    </p>
-    <div class="cta-row">
-      <a class="btn btn-primary" href="/criar-conta">Criar minha conta</a>
-      <a class="btn btn-outline" href="/criar-time">Sou um time</a>
-    </div>
-  </section>
-
-  <section class="landing-pillars">
-    <div class="pillar">
-      <div class="icon-wrap" id="icon-atleta"></div>
-      <h3>Para atletas</h3>
-      <p>Publique conquistas e atualizações em um perfil feito para quem joga, não para quem só posta.</p>
-    </div>
-    <div class="pillar">
-      <div class="icon-wrap" id="icon-recrutador"></div>
-      <h3>Para recrutadores</h3>
-      <p>Encontre atletas por nome, modalidade ou time sem depender de indicações informais.</p>
-    </div>
-    <div class="pillar">
-      <div class="icon-wrap" id="icon-time"></div>
-      <h3>Para times</h3>
-      <p>Times têm perfil próprio, com elenco atual e histórico de entrada e saída de cada atleta.</p>
-    </div>
-  </section>
-
-  <section class="landing-feed-section" id="landing-feed-section" style="display:none;">
-    <div class="head">
-      <h2>O que está rolando agora</h2>
-      <p>Publicações recentes de atletas e times na plataforma.</p>
-    </div>
-    <div class="landing-feed-fade">
-      <div id="landing-feed-list">
-        <div class="loading-row">Carregando publicações...</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TheLocker — Conecte-se ao mercado esportivo</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      rel="shortcut icon"
+      href="./static/img/FaviconTlock.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <nav class="landing-topbar">
+      <a class="brand" href="/"><span class="brand-mark"></span>THE LOCKER</a>
+      <div class="links">
+        <a class="btn btn-outline" href="/login">Entrar</a>
+        <a class="btn btn-primary" href="/criar-conta">Criar conta</a>
       </div>
-    </div>
-    <div style="text-align:center; margin-top:20px;">
-      <a class="btn btn-primary" href="/criar-conta">Criar conta para participar</a>
-    </div>
-  </section>
+    </nav>
 
-  <script src="/static/js/icons.js"></script>
-  <script src="/static/js/api.js"></script>
-  <script>
-    document.getElementById("icon-atleta").innerHTML = ICONS.perfil;
-    document.getElementById("icon-recrutador").innerHTML = ICONS.search;
-    document.getElementById("icon-time").innerHTML = ICONS.shield;
-  </script>
-  <script src="/static/js/index.js"></script>
-</body>
+    <section class="landing-hero">
+      <span class="eyebrow">Rede social de performance esportiva</span>
+      <h1>Sua performance merece <span class="accent">ser vista</span>.</h1>
+      <p>
+        TheLocker conecta atletas a técnicos, olheiros e clubes em um só lugar —
+        sem depender de redes sociais genéricas para mostrar seu jogo.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/criar-conta">Criar minha conta</a>
+        <a class="btn btn-outline" href="/criar-time">Sou um time</a>
+      </div>
+    </section>
+
+    <section class="landing-pillars">
+      <div class="pillar">
+        <div class="icon-wrap" id="icon-atleta"></div>
+        <h3>Para atletas</h3>
+        <p>
+          Publique conquistas e atualizações em um perfil feito para quem joga,
+          não para quem só posta.
+        </p>
+      </div>
+      <div class="pillar">
+        <div class="icon-wrap" id="icon-recrutador"></div>
+        <h3>Para recrutadores</h3>
+        <p>
+          Encontre atletas por nome, modalidade ou time sem depender de
+          indicações informais.
+        </p>
+      </div>
+      <div class="pillar">
+        <div class="icon-wrap" id="icon-time"></div>
+        <h3>Para times</h3>
+        <p>
+          Times têm perfil próprio, com elenco atual e histórico de entrada e
+          saída de cada atleta.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="landing-feed-section"
+      id="landing-feed-section"
+      style="display: none"
+    >
+      <div class="head">
+        <h2>O que está rolando agora</h2>
+        <p>Publicações recentes de atletas e times na plataforma.</p>
+      </div>
+      <div class="landing-feed-fade">
+        <div id="landing-feed-list">
+          <div class="loading-row">Carregando publicações...</div>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 20px">
+        <a class="btn btn-primary" href="/criar-conta"
+          >Criar conta para participar</a
+        >
+      </div>
+    </section>
+
+    <script src="/static/js/icons.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script>
+      document.getElementById("icon-atleta").innerHTML = ICONS.perfil;
+      document.getElementById("icon-recrutador").innerHTML = ICONS.search;
+      document.getElementById("icon-time").innerHTML = ICONS.shield;
+    </script>
+    <script src="/static/js/index.js"></script>
+  </body>
 </html>

@@ -1,72 +1,123 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar conta — TheLocker</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-
-  <div class="auth-shell">
-    <div class="auth-visual">
-      <a class="brand" href="/"><span class="brand-mark"></span>THE LOCKER</a>
-      <div>
-        <div class="tagline">Conecte-se a técnicos, clubes e <span class="accent">oportunidades reais</span>.</div>
-        <div class="stat-row" style="margin-top:26px;">
-          <div class="stat"><b>Atletas</b><span>ganham visibilidade</span></div>
-          <div class="stat"><b>Recrutadores</b><span>encontram talentos</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="auth-form-side">
-      <div class="auth-box">
-        <a class="auth-back" href="/"><span id="auth-back-icon"></span>Voltar ao início</a>
-        <h1>Criar conta</h1>
-        <p class="sub">Leva menos de um minuto.</p>
-
-        <div class="form-error" id="form-error"></div>
-        <div class="form-success" id="form-success"></div>
-
-        <form id="cadastro-form">
-          <div class="field">
-            <label for="nome">Nome completo</label>
-            <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Criar conta — TheLocker</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      rel="shortcut icon"
+      href="./static/img/FaviconTlock.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <div class="auth-shell">
+      <div class="auth-visual">
+        <a class="brand" href="/"><span class="brand-mark"></span>THE LOCKER</a>
+        <div>
+          <div class="tagline">
+            Conecte-se a técnicos, clubes e
+            <span class="accent">oportunidades reais</span>.
           </div>
-          <div class="field">
-            <label for="email">E-mail</label>
-            <input type="email" id="email" name="email" placeholder="voce@email.com" required autocomplete="email">
-          </div>
-          <div class="field">
-            <label for="senha">Senha</label>
-            <input type="password" id="senha" name="senha" placeholder="Mínimo 6 caracteres" minlength="6" required autocomplete="new-password">
-          </div>
-          <div class="field">
-            <label>Eu sou</label>
-            <div class="role-toggle">
-              <input type="radio" id="tipo-atleta" name="tipo" value="atleta" checked>
-              <label for="tipo-atleta">Atleta</label>
-              <input type="radio" id="tipo-recrutador" name="tipo" value="recrutador">
-              <label for="tipo-recrutador">Recrutador</label>
+          <div class="stat-row" style="margin-top: 26px">
+            <div class="stat">
+              <b>Atletas</b><span>ganham visibilidade</span>
+            </div>
+            <div class="stat">
+              <b>Recrutadores</b><span>encontram talentos</span>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary btn-full" id="submit-btn">Criar conta</button>
-        </form>
+        </div>
+      </div>
 
-        <div class="auth-switch">
-          Já tem conta? <a href="/login">Entrar</a><br>
-          É um time? <a href="/criar-time">Cadastre seu time</a>
+      <div class="auth-form-side">
+        <div class="auth-box">
+          <a class="auth-back" href="/"
+            ><span id="auth-back-icon"></span>Voltar ao início</a
+          >
+          <h1>Criar conta</h1>
+          <p class="sub">Leva menos de um minuto.</p>
+
+          <div class="form-error" id="form-error"></div>
+          <div class="form-success" id="form-success"></div>
+
+          <form id="cadastro-form">
+            <div class="field">
+              <label for="nome">Nome completo</label>
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                placeholder="Seu nome"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="email">E-mail</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="voce@email.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+            <div class="field">
+              <label for="senha">Senha</label>
+              <input
+                type="password"
+                id="senha"
+                name="senha"
+                placeholder="Mínimo 6 caracteres"
+                minlength="6"
+                required
+                autocomplete="new-password"
+              />
+            </div>
+            <div class="field">
+              <label>Eu sou</label>
+              <div class="role-toggle">
+                <input
+                  type="radio"
+                  id="tipo-atleta"
+                  name="tipo"
+                  value="atleta"
+                  checked
+                />
+                <label for="tipo-atleta">Atleta</label>
+                <input
+                  type="radio"
+                  id="tipo-recrutador"
+                  name="tipo"
+                  value="recrutador"
+                />
+                <label for="tipo-recrutador">Recrutador</label>
+              </div>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary btn-full"
+              id="submit-btn"
+            >
+              Criar conta
+            </button>
+          </form>
+
+          <div class="auth-switch">
+            Já tem conta? <a href="/login">Entrar</a><br />
+            É um time? <a href="/criar-time">Cadastre seu time</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script src="/static/js/icons.js"></script>
-  <script>
-    document.getElementById("auth-back-icon").innerHTML = ICONS.arrowLeft;
-  </script>
-  <script src="/static/js/api.js"></script>
-  <script src="/static/js/criar-conta.js"></script>
-</body>
+    <script src="/static/js/icons.js"></script>
+    <script>
+      document.getElementById("auth-back-icon").innerHTML = ICONS.arrowLeft;
+    </script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/criar-conta.js"></script>
+  </body>
 </html>

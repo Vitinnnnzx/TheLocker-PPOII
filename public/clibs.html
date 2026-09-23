@@ -1,49 +1,65 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLIBS — TheLocker</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CLIBS — TheLocker</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      rel="shortcut icon"
+      href="./static/img/FaviconTlock.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar-mount"></aside>
+      <header class="topbar" id="topbar-mount"></header>
 
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar-mount"></aside>
-    <header class="topbar" id="topbar-mount"></header>
+      <div class="content narrow">
+        <main class="main-col" style="max-width: 760px">
+          <div class="chat-wrapper">
+            <div class="chat-header">
+              <div class="bot-avatar">C</div>
+              <div>
+                <h2 style="font-size: 16px; margin-bottom: 2px">CLIBS</h2>
+                <span style="font-size: 12px; color: var(--accent)"
+                  >Online (Simulação)</span
+                >
+              </div>
+            </div>
 
-    <div class="content narrow">
-      <main class="main-col" style="max-width: 760px;">
-        <div class="chat-wrapper">
-          <div class="chat-header">
-            <div class="bot-avatar">C</div>
-            <div>
-              <h2 style="font-size: 16px; margin-bottom: 2px;">CLIBS</h2>
-              <span style="font-size: 12px; color: var(--accent);">Online (Simulação)</span>
+            <div class="chat-messages" id="chat-messages">
+              <div class="msg-row bot">
+                <div class="msg-bubble">
+                  Olá! Eu sou o CLIBS, o assistente virtual do TheLocker. Como
+                  posso ajudar com a sua performance hoje?
+                </div>
+              </div>
             </div>
-          </div>
-          
-          <div class="chat-messages" id="chat-messages">
-            <div class="msg-row bot">
-              <div class="msg-bubble">Olá! Eu sou o CLIBS, o assistente virtual do TheLocker. Como posso ajudar com a sua performance hoje?</div>
+
+            <div class="typing-indicator" id="typing-indicator">
+              O CLIBS está a escrever...
             </div>
+
+            <form class="chat-input-area" id="chat-form">
+              <input
+                type="text"
+                id="chat-input"
+                placeholder="Escreva a sua mensagem para o CLIBS..."
+                autocomplete="off"
+              />
+              <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
           </div>
-          
-          <div class="typing-indicator" id="typing-indicator">O CLIBS está a escrever...</div>
-          
-          <form class="chat-input-area" id="chat-form">
-            <input type="text" id="chat-input" placeholder="Escreva a sua mensagem para o CLIBS..." autocomplete="off">
-            <button type="submit" class="btn btn-primary">Enviar</button>
-          </form>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
-  </div>
 
-  <script src="/static/js/icons.js"></script>
-  <script src="/static/js/api.js"></script>
-  <script src="/static/js/nav.js"></script>
-  <script src="/static/js/app.js"></script>
-  <script src="/static/js/clibs.js"></script>
-</body>
+    <script src="/static/js/icons.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/nav.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/clibs.js"></script>
+  </body>
 </html>
