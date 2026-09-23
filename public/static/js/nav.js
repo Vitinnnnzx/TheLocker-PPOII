@@ -17,8 +17,10 @@ async function montarShell(activePage) {
   const iconPerfil = ehTime ? ICONS.time : ICONS.perfil;
 
   sidebarMount.innerHTML = `
-    <a class="brand" href="/"><span class="brand-mark"></span>THE LOCKER</a>
-
+    <a class="brand" href="/">
+        <img class="logo" src="./static/img/LogoTlocker.png" alt="logo" />
+        THE LOCKER
+    </a>
     <nav class="nav-links">
       <a class="nav-link ${activePage === "feed" ? "active" : ""}" href="/">
         ${ICONS.feed}<span>Feed</span>
