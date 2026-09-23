@@ -20,7 +20,8 @@ const API = {
     }
 
     if (!res.ok) {
-      const erro = (data && (data.erro || data.mensagem)) || `Erro ${res.status}`;
+      const erro =
+        (data && (data.erro || data.mensagem)) || `Erro ${res.status}`;
       const err = new Error(erro);
       err.status = res.status;
       err.data = data;
@@ -32,10 +33,16 @@ const API = {
 
   // ---- auth ----
   criarConta(payload) {
-    return this._request("/criar-conta", { method: "POST", body: JSON.stringify(payload) });
+    return this._request("/criar-conta", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
   },
   login(payload) {
-    return this._request("/login", { method: "POST", body: JSON.stringify(payload) });
+    return this._request("/login", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
   },
   usuarioAtual() {
     return this._request("/usuario");
@@ -43,7 +50,10 @@ const API = {
 
   // ---- postagens ----
   criarPostagem(payload) {
-    return this._request("/postagem", { method: "POST", body: JSON.stringify(payload) });
+    return this._request("/postagem", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
   },
   listarPostagens() {
     return this._request("/postagens");
@@ -55,7 +65,9 @@ const API = {
     return this._request(`/postagem/${postagemId}/curtir`, { method: "POST" });
   },
   descurtir(postagemId) {
-    return this._request(`/postagem/${postagemId}/curtir`, { method: "DELETE" });
+    return this._request(`/postagem/${postagemId}/curtir`, {
+      method: "DELETE",
+    });
   },
   comentar(postagemId, texto) {
     return this._request(`/postagem/${postagemId}/comentario`, {
@@ -86,7 +98,10 @@ const API = {
     return this._request("/perfil/seguindo");
   },
   atualizarPerfil(payload) {
-    return this._request("/perfil/config", { method: "PUT", body: JSON.stringify(payload) });
+    return this._request("/perfil/config", {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
   },
 
   // ---- perfil público ----
@@ -114,7 +129,10 @@ const API = {
 
   // ---- times ----
   criarTime(payload) {
-    return this._request("/time", { method: "POST", body: JSON.stringify(payload) });
+    return this._request("/time", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
   },
   meuTime() {
     return this._request("/time/meu");
@@ -123,7 +141,10 @@ const API = {
     return this._request(`/time/${timeId}`);
   },
   atualizarTime(timeId, payload) {
-    return this._request(`/time/${timeId}`, { method: "PUT", body: JSON.stringify(payload) });
+    return this._request(`/time/${timeId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
   },
   excluirTime(timeId) {
     return this._request(`/time/${timeId}`, { method: "DELETE" });
@@ -141,7 +162,9 @@ const API = {
     });
   },
   removerAtletaDoTime(timeId, atletaId) {
-    return this._request(`/time/${timeId}/atleta/${atletaId}`, { method: "DELETE" });
+    return this._request(`/time/${timeId}/atleta/${atletaId}`, {
+      method: "DELETE",
+    });
   },
 };
 
@@ -193,12 +216,15 @@ function formatarData(dataStr, opts) {
   if (!dataStr) return "";
   const data = new Date(dataStr);
   if (isNaN(data.getTime())) return "";
-  return data.toLocaleDateString("pt-BR", opts || { month: "short", year: "numeric" });
+  return data.toLocaleDateString(
+    "pt-BR",
+    opts || { month: "short", year: "numeric" },
+  );
 }
 
 function tipoLabel(tipo) {
   const mapa = { atleta: "Atleta", recrutador: "Recrutador", time: "Time" };
-  return mapa[tipo] || (tipo || "");
+  return mapa[tipo] || tipo || "";
 }
 
 /**

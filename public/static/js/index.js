@@ -5,7 +5,7 @@ async function carregarFeedPublico() {
   const list = document.getElementById("landing-feed-list");
 
   try {
-    const postagens = await API.listarPostagens();
+    const postagens = "";
 
     if (!postagens || postagens.length === 0) {
       return; // sem postagens ainda: não mostra a seção
@@ -13,7 +13,10 @@ async function carregarFeedPublico() {
 
     section.style.display = "block";
 
-    list.innerHTML = postagens.slice(0, 4).map((p) => `
+    list.innerHTML = postagens
+      .slice(0, 4)
+      .map(
+        (p) => `
       <article class="post">
         <div class="post-head">
           ${avatarHTML(p.usuario.nome, p.usuario.foto, { team: p.usuario.tipo === "time" })}
@@ -28,7 +31,9 @@ async function carregarFeedPublico() {
         ${p.texto ? `<p class="post-text">${escapeHTML(p.texto)}</p>` : ""}
         ${p.imagem ? `<div class="post-image"><img src="${escapeHTML(p.imagem)}" alt="" loading="lazy"></div>` : ""}
       </article>
-    `).join("");
+    `,
+      )
+      .join("");
   } catch (e) {
     // silencioso: a landing funciona normalmente sem a prévia do feed
   }

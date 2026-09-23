@@ -7,13 +7,17 @@
     <link rel="stylesheet" href="/static/css/style.css" />
     <link
       rel="shortcut icon"
-      href="./static/img/FaviconTlock.png"
+      href="{{ url_for('static', filename='/img/FaviconTlock.png') }}"
       type="image/x-icon"
     />
   </head>
   <body>
     <nav class="landing-topbar">
-      <a class="brand" href="/"><span class="brand-mark"></span>THE LOCKER</a>
+      <a class="brand" href="/"
+        ><span class="brand-mark"></span>
+        <img class="logo" src="./static/img/LogoTlocker.png" alt="" />
+        THE LOCKER</a
+      >
       <div class="links">
         <a class="btn btn-outline" href="/login">Entrar</a>
         <a class="btn btn-primary" href="/criar-conta">Criar conta</a>
