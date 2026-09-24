@@ -18,7 +18,7 @@ async function montarShell(activePage) {
 
   sidebarMount.innerHTML = `
     <a class="brand" href="/">
-        <img class="logo" src="./static/img/LogoTlocker.png" alt="logo" />
+        <img class="logo" src="/static/img/LogoTlocker.png" alt="teste" />
         THE LOCKER
     </a>
     <nav class="nav-links">
@@ -93,7 +93,10 @@ async function montarShellOpcional() {
     return usuario;
   } catch (e) {
     sidebarMount.innerHTML = `
-      <a class="brand" href="/"><span class="brand-mark"></span>THE LOCKER</a>
+      <a class="brand" href="/">       
+        <img class="logo" src="static/img/LogoTlocker.png" alt="logo" />
+        THE LOCKER
+      </a>
       <div class="sidebar-section"></div>
       <a class="btn btn-primary btn-full" href="/login">Entrar</a>
     `;
