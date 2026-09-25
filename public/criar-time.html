@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastrar time — TheLocker</title>
     <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/kinetic-grid.css" />
     <link
       rel="shortcut icon"
       href="{{ url_for('static', filename='/img/FaviconTlock.png') }}"
@@ -14,8 +15,20 @@
   <body>
     <div class="auth-shell">
       <div class="auth-visual">
-        <a class="brand" href="/"><span class="brand-mark"></span>THE LOCKER</a>
-        <div>
+        <!-- [KINETIC GRID — Claudio] Background animado (item 3 do pedido).
+             Malha de palavras-chave com drift contínuo + tilt 3D no mouse.
+             Ver /static/css/kinetic-grid.css e /static/js/kinetic-grid.js.
+             Fica atrás de tudo (z-index:0) e nunca intercepta cliques
+             (pointer-events: none), então não atrapalha a leitura nem
+             o uso do restante da tela. -->
+        <div class="kinetic-grid" id="kineticGrid" aria-hidden="true">
+          <div class="kinetic-grid__inner" id="kineticGridInner"></div>
+        </div>
+        <a class="brand" href="/">
+          <img class="logo" src="./static/img/LogoTlocker.png" alt="logo" />
+        </a>
+
+        <div class="auth-visual-content">
           <div class="tagline">
             Monte seu elenco e <span class="accent">organize sua equipe</span>.
           </div>
@@ -128,5 +141,8 @@
     </script>
     <script src="/static/js/api.js"></script>
     <script src="/static/js/criar-time.js"></script>
+    <!-- [KINETIC GRID — Claudio] monta as linhas de palavras e liga o
+         tilt 3D; só faz algo nesta página, pois procura #kineticGrid. -->
+    <script src="/static/js/kinetic-grid.js"></script>
   </body>
 </html>

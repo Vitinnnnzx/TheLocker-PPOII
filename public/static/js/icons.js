@@ -19,3 +19,104 @@ const ICONS = {
   arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>',
   alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
 };
+
+/* ================================================================
+   [ENHANCE.JS — Claudio] Efeito 3D "tilt + spotlight" nos cards
+   ------------------------------------------------------------------
+   Bloco 100% NOVO e ADITIVO, anexado no final do icons.js (o único
+   script já carregado em TODAS as páginas do site) para não precisar
+   adicionar nenhuma tag <script> nova em nenhum HTML.
+
+   O que faz: quando o mouse passa sobre um post, um card de resultado
+   de busca (.adv-card), um card de time (.team-card) ou um "pillar"
+   da landing page, o card ganha uma leve inclinação 3D (rotateX/Y)
+   que acompanha o cursor, mais um brilho discreto ("spotlight") na
+   posição do mouse. O CSS que define a aparência desse efeito está
+   em /static/css/enhancements.css (classe .tilt-3d).
+
+   Cuidados tomados de propósito:
+   - Só ativa em dispositivos com mouse de precisão (pointer: fine),
+     nunca em touch — em celular o efeito simplesmente não existe.
+   - Respeita "prefers-reduced-motion": se a pessoa pediu menos
+     movimento no sistema, o efeito nem é inicializado.
+   - Ângulo máximo de apenas 6°, para manter a seriedade do produto
+     (nada de inclinação exagerada tipo "app de jogo").
+   - Funciona também para cards que são inseridos dinamicamente
+     depois (posts do feed, resultados de busca), via MutationObserver
+     — nenhum HTML/JS existente precisou ser alterado para isso.
+   ================================================================ */
+(function tlockerEnhanceInit() {
+  const PODE_ANIMAR =
+    window.matchMedia("(pointer: fine)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!PODE_ANIMAR) return;
+
+  const SELETOR_TILT = ".post, .adv-card, .team-card, .pillar";
+  const ANGULO_MAX = 6; // graus — sutil, sem exagero "gamer"
+
+  function aplicarTilt(el) {
+    if (!el || el.dataset.tiltReady) return;
+    el.dataset.tiltReady = "1";
+    el.classList.add("tilt-3d");
+
+    let raf = null;
+
+    el.addEventListener("mousemove", (e) => {
+      const rect = el.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width; // 0 a 1
+      const py = (e.clientY - rect.top) / rect.height; // 0 a 1
+
+      const rotY = (px - 0.5) * ANGULO_MAX * 2;
+      const rotX = (0.5 - py) * ANGULO_MAX * 2;
+
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        el.classList.add("tilt-active");
+        el.style.setProperty("--tilt-x", rotX.toFixed(2) + "deg");
+        el.style.setProperty("--tilt-y", rotY.toFixed(2) + "deg");
+        el.style.setProperty("--spot-x", (px * 100).toFixed(1) + "%");
+        el.style.setProperty("--spot-y", (py * 100).toFixed(1) + "%");
+      });
+    });
+
+    el.addEventListener("mouseleave", () => {
+      if (raf) cancelAnimationFrame(raf);
+      el.classList.remove("tilt-active");
+      el.style.setProperty("--tilt-x", "0deg");
+      el.style.setProperty("--tilt-y", "0deg");
+    });
+  }
+
+  function varrerENovosCards(raiz) {
+    raiz.querySelectorAll(SELETOR_TILT).forEach(aplicarTilt);
+  }
+
+  function iniciar() {
+    varrerENovosCards(document);
+
+    // Observa o conteúdo dinâmico (feed, busca, times) para aplicar
+    // o efeito também em cards que ainda nem existiam no carregamento
+    // inicial da página.
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        m.addedNodes.forEach((node) => {
+          if (node.nodeType !== 1) return;
+          if (node.matches && node.matches(SELETOR_TILT)) {
+            aplicarTilt(node);
+          }
+          if (node.querySelectorAll) {
+            varrerENovosCards(node);
+          }
+        });
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iniciar);
+  } else {
+    iniciar();
+  }
+})();

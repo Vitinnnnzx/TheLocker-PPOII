@@ -58,6 +58,65 @@ def criar_postagem():
         conn.close()
 
 
+@postagens.route("/postagem/<int:postagem_id>", methods=["DELETE"])
+@login_required
+def deletar_postagem(postagem_id):
+    """
+    [Claudio] Nova rota: exclui uma postagem.
+    Só o dono da postagem pode excluí-la (checagem por usuario_id na
+    própria tabela publicacao, comparado com current_user.id).
+    comentario e curtida já têm FOREIGN KEY ... ON DELETE CASCADE
+    para publicacao_id (ver commands/comentarios.txt e curtida.txt),
+    então excluir a publicacao já apaga os comentários e curtidas
+    dela automaticamente — não precisa de DELETE manual nessas tabelas.
+    """
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT usuario_id FROM publicacao WHERE id = %s",
+            (postagem_id,)
+        )
+        resultado = cursor.fetchone()
+
+        if not resultado:
+            return jsonify({
+                "erro": "Postagem não encontrada."
+            }), 404
+
+        if resultado[0] != current_user.id:
+            return jsonify({
+                "erro": "Você não pode excluir uma postagem que não é sua."
+            }), 403
+
+        cursor.execute(
+            "DELETE FROM publicacao WHERE id = %s",
+            (postagem_id,)
+        )
+
+        conn.commit()
+
+        return jsonify({
+            "mensagem": "Postagem excluída!"
+        }), 200
+
+    except Exception as erro:
+
+        conn.rollback()
+
+        print(erro)
+
+        return jsonify({
+            "erro": "Erro ao excluir postagem."
+        }), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
 @postagens.route("/usuario", methods=["GET"])
 @login_required
 def pegar_usuario2():

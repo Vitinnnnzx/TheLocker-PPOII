@@ -1,7 +1,13 @@
 function renderPostList(containerId, prefix, postagens, options) {
   const container = document.getElementById(containerId);
   const opts = Object.assign(
-    { emptyTitle: "Nenhuma publicação", emptyText: "", interativo: true },
+    {
+      emptyTitle: "Nenhuma publicação",
+      emptyText: "",
+      interativo: true,
+      usuarioAtualId: null, // [Claudio] id do usuário logado — decide se mostra o botão de excluir
+      onDelete: null, // [Claudio] callback(postagemId) chamado após excluir com sucesso
+    },
     options,
   );
 
@@ -15,7 +21,7 @@ function renderPostList(containerId, prefix, postagens, options) {
   }
 
   container.innerHTML = postagens
-    .map((p) => postCardHTML(p, prefix, opts.interativo))
+    .map((p) => postCardHTML(p, prefix, opts.interativo, opts.usuarioAtualId))
     .join("");
 
   if (!opts.interativo) return;
@@ -36,6 +42,14 @@ function renderPostList(containerId, prefix, postagens, options) {
         toggleComentarios(p.id, prefix),
       );
 
+    // [Claudio] Novo: botão de excluir postagem (só existe no HTML
+    // quando a postagem é do próprio usuário — ver postCardHTML).
+    const deleteBtn = card.querySelector(".post-delete-btn");
+    if (deleteBtn)
+      deleteBtn.addEventListener("click", () =>
+        excluirPostagem(p.id, prefix, opts.onDelete),
+      );
+
     const form = card.querySelector(".comment-form");
     if (form) {
       form.addEventListener("submit", (e) => {
@@ -49,12 +63,18 @@ function renderPostList(containerId, prefix, postagens, options) {
   });
 }
 
-function postCardHTML(p, prefix, interativo) {
+function postCardHTML(p, prefix, interativo, usuarioAtualId) {
   const nome = p.usuario?.nome || "Usuário";
   const foto = p.usuario?.foto || null;
   const ehTime = p.usuario?.tipo === "time";
   const liked = !!p.curtiu;
   const temContadores = p.curtidas !== undefined;
+  // [Claudio] Novo: só mostra a opção de excluir quando a postagem
+  // é do próprio usuário logado E o card é interativo (feed/perfil
+  // próprio). Em perfis públicos (interativo=false ou usuário de
+  // outra conta) esse botão nunca é renderizado.
+  const souDono =
+    interativo && usuarioAtualId != null && p.usuario?.id === usuarioAtualId;
 
   return `
     <article class="post" id="${prefix}-post-${p.id}">
@@ -67,6 +87,18 @@ function postCardHTML(p, prefix, interativo) {
           </div>
           <div class="time">${tempoRelativo(p.data_criacao)}</div>
         </div>
+        ${
+          souDono
+            ? `
+          <button
+            class="post-delete-btn"
+            type="button"
+            title="Excluir postagem"
+            aria-label="Excluir postagem"
+          >${ICONS.trash}</button>
+        `
+            : ""
+        }
       </div>
 
       ${p.texto ? `<p class="post-text">${escapeHTML(p.texto)}</p>` : ""}
@@ -144,6 +176,34 @@ async function toggleCurtir(postagemId, prefix, postagens) {
     btn.innerHTML =
       (liked ? ICONS.heartFilled : ICONS.heart) +
       `<span class="like-count">${count}</span>`;
+  }
+}
+
+// [Claudio] Nova função: exclui a postagem (com confirmação, igual ao
+// padrão já usado em time.js para remover atleta do time).
+async function excluirPostagem(postagemId, prefix, onDelete) {
+  if (!confirm("Excluir esta postagem? Essa ação não pode ser desfeita.")) {
+    return;
+  }
+
+  const card = document.getElementById(`${prefix}-post-${postagemId}`);
+  const btn = card ? card.querySelector(".post-delete-btn") : null;
+
+  if (btn) btn.disabled = true;
+  if (card) card.style.opacity = "0.5";
+
+  try {
+    await API.deletarPostagem(postagemId);
+
+    if (card) card.remove();
+
+    // Avisa a página (feed/perfil) que a postagem sumiu, pra ela
+    // atualizar a própria lista em memória e contadores (ex: "Postagens: 12").
+    if (typeof onDelete === "function") onDelete(postagemId);
+  } catch (e) {
+    if (card) card.style.opacity = "";
+    if (btn) btn.disabled = false;
+    alert(e.message || "Não foi possível excluir a postagem.");
   }
 }
 

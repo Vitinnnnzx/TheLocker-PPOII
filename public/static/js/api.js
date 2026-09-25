@@ -78,6 +78,10 @@ const API = {
   comentarios(postagemId) {
     return this._request(`/postagem/${postagemId}/comentarios`);
   },
+  // [Claudio] Novo: exclui uma postagem (só funciona se for do próprio usuário — validado no backend).
+  deletarPostagem(postagemId) {
+    return this._request(`/postagem/${postagemId}`, { method: "DELETE" });
+  },
 
   // ---- busca ----
   buscar(texto) {

@@ -1,0 +1,155 @@
+/* ================================================================
+   KINETIC-GRID.CSS — Claudio
+   ------------------------------------------------------------------
+   Arquivo 100% NOVO. Estiliza a "Kinetic Typo Grid": um background
+   animado feito só de palavras-chave do universo esportivo/corporativo
+   (TEAM, SCOUT, CONNECT...), pensado para preencher a área visual
+   esquerda de telas de autenticação vazias (hoje usado em
+   criar-time.html).
+
+   Como funciona a "profundidade" (sem nenhuma imagem, só CSS):
+   - Várias linhas de texto (.kinetic-row) se movem continuamente na
+     horizontal, em looping infinito, metade para a esquerda, metade
+     para a direita — o "drift" cinético pedido.
+   - Cada linha tem tamanho de fonte, opacidade e blur diferentes,
+     calculados via JS (kinetic-grid.js) e aplicados por variáveis
+     CSS (--kw-size / --kw-op / --kw-blur) — as linhas do "meio" ficam
+     mais nítidas e visíveis (camada da frente) e as das bordas ficam
+     mais apagadas e desfocadas (camada de trás), simulando profundidade.
+   - O bloco inteiro é rotacionado (~ -8deg) para parecer uma malha/grade
+     diagonal, e não linhas retas de texto.
+   - O JS aplica rotateX/rotateY suaves em cima disso (tilt 3D real,
+     com perspective definida em .auth-visual), respondendo ao mouse.
+
+   Cores: cinza bem escuro/sutil sobre o fundo preto — nunca cores do
+   tema (accent, teal, etc.) — funciona como uma marca d'água discreta,
+   sem nunca competir com o texto real (.tagline, .stat-row) que fica
+   por cima, em z-index mais alto.
+   ================================================================ */
+
+/* Camada de fundo que recebe o tilt 3D (rotateX/rotateY via JS) */
+.kinetic-grid {
+  position: absolute;
+  inset: -15%; /* sobra de conteúdo (overscan) pra não abrir "vão" nas bordas ao inclinar */
+  z-index: 0; /* sempre atrás do conteúdo real do painel */
+  pointer-events: none; /* nunca atrapalha clique/leitura do conteúdo real */
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform: rotateX(0deg) rotateY(0deg); /* estado neutro; JS atualiza em runtime */
+}
+
+/* Bloco interno: aqui entra a rotação diagonal "de grade" */
+.kinetic-grid__inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(14px, 2.6vw, 30px);
+  transform: rotate(-8deg) scale(1.3);
+  transform-origin: center;
+}
+
+/* Cada linha de palavras — o "drift" cinético contínuo */
+.kinetic-row {
+  display: flex;
+  align-items: center;
+  gap: 46px;
+  white-space: nowrap;
+  width: max-content;
+}
+
+.kinetic-row span {
+  font-family: "Inter", sans-serif; /* tipografia limpa, nunca monospace */
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-size: var(--kw-size, 32px);
+  color: rgba(210, 212, 218, var(--kw-op, 0.06)); /* cinza sutil, nunca cor do tema */
+  filter: blur(var(--kw-blur, 0px));
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* Looping infinito: o conteúdo de cada linha é duplicado pelo JS
+   (mesma sequência 2x), então animar de 0% a -50% cria um loop
+   perfeito e imperceptível, sem "pulo" no fim da animação. */
+@keyframes kineticDriftLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes kineticDriftRight {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.kinetic-row.dir-left {
+  animation: kineticDriftLeft var(--kw-dur, 42s) linear infinite;
+}
+.kinetic-row.dir-right {
+  animation: kineticDriftRight var(--kw-dur, 48s) linear infinite;
+}
+
+/* Leve "respiração" vertical em camadas alternadas — reforça a
+   sensação de profundidade/flutuação junto com o drift horizontal. */
+@keyframes kineticFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.kinetic-row.float {
+  animation-name: kineticDriftLeft, kineticFloat;
+  animation-duration: var(--kw-dur, 42s), 7s;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+}
+.kinetic-row.dir-right.float {
+  animation-name: kineticDriftRight, kineticFloat;
+}
+
+/* Vinheta suave: escurece levemente as bordas do painel para a
+   grade "sumir" com elegância perto da borda, sem corte seco. */
+.kinetic-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    transparent 35%,
+    var(--bg) 92%
+  );
+  pointer-events: none;
+}
+
+/* Conteúdo real do painel (logo + texto) sempre acima da grade */
+.auth-visual .brand,
+.auth-visual-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Acessibilidade: sem movimento pra quem pediu menos animação */
+@media (prefers-reduced-motion: reduce) {
+  .kinetic-row,
+  .kinetic-row.float {
+    animation: none !important;
+  }
+  .kinetic-grid {
+    transform: none !important;
+  }
+}
+
+/* Em telas pequenas o painel esquerdo já fica oculto (ver
+   auth-landing.css, @media max-width:860px), então a grade nem
+   chega a ser processada — bom para performance em mobile. */

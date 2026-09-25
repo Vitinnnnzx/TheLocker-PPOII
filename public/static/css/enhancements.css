@@ -1,0 +1,395 @@
+/* ================================================================
+   ENHANCEMENTS.CSS — Aprimoramentos visuais (Claudio)
+   ------------------------------------------------------------------
+   Arquivo 100% NOVO e ADITIVO. Nenhuma regra abaixo altera cores,
+   estrutura HTML ou o layout base do site — apenas adiciona:
+
+     1) Acessibilidade (foco de teclado visível)
+     2) Transições/microinterações suaves e discretas
+     3) Degradês sutis (profundidade, nunca decorativos/exagerados)
+     4) Efeito "spotlight" 3D que segue o cursor nos cards (opcional,
+        aplicado somente em telas com mouse e sem "prefers-reduced-
+        motion"), controlado via variáveis CSS setadas pelo JS em
+        icons.js (ver comentário "ENHANCE.JS" nesse arquivo)
+
+   Este arquivo é importado por ÚLTIMO em style.css de propósito:
+   assim ele pode refinar (sem sobrescrever cores/base) o comporta-
+   mento de elementos como .user-menu-dropdown e .modal-box, que
+   antes só tinham display:none/flex (abrupto) e passam a ter uma
+   transição de entrada suave.
+   ================================================================ */
+
+/* ---------------------------------------------------------------
+   1) ACESSIBILIDADE — foco visível para navegação por teclado
+   Antes o site não tinha nenhum estado de :focus dedicado para
+   quem navega via Tab (fora dos campos de formulário). Isso é
+   essencial em uma plataforma "séria" voltada a recrutadores.
+   --------------------------------------------------------------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.nav-link:focus-visible,
+.tab:focus-visible,
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Remove o retângulo de foco padrão do navegador só quando o
+   elemento já tem um tratamento visual próprio (ex.: input com
+   border-color no :focus), evitando foco "duplicado". */
+.field input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible,
+.composer textarea:focus-visible,
+.search-box input:focus-visible,
+.comment-form input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* ---------------------------------------------------------------
+   2) MICROINTERAÇÕES — transições suaves e discretas
+   --------------------------------------------------------------- */
+
+/* Easing corporativo padrão (entrada suave, sem "bounce" exagerado) */
+:root {
+  --ease-corp: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Links de navegação: o ícone desliza sutilmente ao passar o mouse */
+.nav-link svg {
+  transition:
+    transform 0.2s var(--ease-corp),
+    color 0.15s;
+}
+.nav-link:hover svg {
+  transform: translateX(2px);
+}
+
+/* Avatares: leve "respiro" ao passar o mouse, sem parecer brinquedo */
+.avatar {
+  transition: transform 0.18s var(--ease-corp);
+}
+a:hover > .avatar,
+.user-menu-trigger:hover .avatar {
+  transform: scale(1.045);
+}
+
+/* Botões: easing mais elegante no lugar do padrão abrupto */
+.btn,
+.btn-post,
+.nav-link,
+.post-action,
+.tag-pill,
+.sidebar-team-row,
+.search-result-item,
+.stat-tile,
+.contact-item {
+  transition:
+    transform 0.18s var(--ease-corp),
+    background 0.18s var(--ease-corp),
+    border-color 0.18s var(--ease-corp),
+    box-shadow 0.18s var(--ease-corp),
+    color 0.15s;
+}
+
+/* Tiles de estatística e pills ganham uma leve elevação — reforça
+   hierarquia sem recorrer a cor nova ou arredondamento extra */
+.stat-tile:hover {
+  transform: translateY(-2px);
+}
+.tag-pill {
+  transform: translateY(0);
+}
+
+/* Itens de resultado de busca deslizam de leve, como em um menu
+   corporativo "premium" (LinkedIn/Notion-like) */
+.search-result-item:hover {
+  transform: translateX(2px);
+}
+.sidebar-team-row:hover {
+  transform: translateX(2px);
+}
+
+/* Dropdown do menu do usuário: antes era display:none -> block
+   (abrupto). Agora entra com fade + leve movimento vertical. */
+.user-menu-dropdown {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(0.98);
+  transition:
+    opacity 0.16s var(--ease-corp),
+    transform 0.18s var(--ease-corp),
+    visibility 0.16s;
+  pointer-events: none;
+  transform-origin: top right;
+}
+.user-menu-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Modal: mesma lógica — fade suave do overlay + "pop" discreto da
+   caixa, no lugar da troca abrupta de display. */
+.modal-overlay {
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.2s var(--ease-corp),
+    visibility 0.2s;
+}
+.modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.modal-box {
+  transform: scale(0.96) translateY(8px);
+  transition: transform 0.22s var(--ease-corp);
+}
+.modal-overlay.open .modal-box {
+  transform: scale(1) translateY(0);
+}
+
+/* Painel de comentários: expande com uma transição leve de altura/
+   opacidade em vez do corte seco de display:none -> block. */
+.comments-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.22s var(--ease-corp),
+    opacity 0.18s var(--ease-corp);
+}
+.comments-panel.open {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.comments-panel > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------
+   3) DEGRADÊS SUTIS — profundidade discreta, nunca decorativa
+   --------------------------------------------------------------- */
+
+/* Fundo geral: uma respiração de profundidade quase imperceptível,
+   mantendo a cor de fundo original (--bg) intacta. */
+body {
+  background:
+    radial-gradient(
+      circle at 12% -10%,
+      rgba(199, 255, 0, 0.05),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(199, 255, 0, 0.03),
+      transparent 35%
+    ),
+    var(--bg);
+}
+
+/* Cards e posts: uma linha de destaque quase invisível no topo,
+   que só ganha um pouco mais de presença no hover — dá profundidade
+   sem introduzir nenhuma cor nova (usa a própria --accent do tema). */
+.card,
+.post,
+.adv-card,
+.team-card,
+.modal-box {
+  position: relative;
+  transition:
+    transform 0.2s var(--ease-corp),
+    border-color 0.2s var(--ease-corp),
+    box-shadow 0.25s var(--ease-corp);
+}
+.card::before,
+.post::before,
+.adv-card::before,
+.team-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(199, 255, 0, 0.16),
+    rgba(199, 255, 0, 0) 30%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-corp);
+  pointer-events: none;
+}
+.card:hover::before,
+.post:hover::before,
+.adv-card:hover::before,
+.team-card:hover::before {
+  opacity: 1;
+}
+
+/* Botão primário: leve sheen (brilho) que atravessa o botão no
+   hover — efeito discreto, muito usado em produtos B2B sérios. */
+.btn-primary,
+.btn-post {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after,
+.btn-post::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.55s var(--ease-corp);
+  pointer-events: none;
+}
+.btn-primary:hover::after,
+.btn-post:hover::after {
+  left: 130%;
+}
+
+/* Divisórias (bordas retas, sem arredondar nada extra) ganham um
+   gradiente sutil em vez de uma linha 100% chapada. */
+.topbar,
+.tab-row,
+.post-actions,
+.sidebar {
+  border-image: linear-gradient(
+      90deg,
+      var(--border) 0%,
+      var(--border) 70%,
+      transparent 100%
+    )
+    1;
+}
+.sidebar {
+  border-image: linear-gradient(
+      180deg,
+      var(--border) 0%,
+      var(--border) 85%,
+      transparent 100%
+    )
+    1;
+}
+
+/* ---------------------------------------------------------------
+   4) ELEVAÇÃO EM HOVER — sombra discreta, cantos retos preservados
+   Reforça hierarquia/seriedade: sem novo border-radius, apenas
+   profundidade (translateY + shadow), como painéis de dashboards
+   corporativos (Linear, Stripe, Vercel).
+   --------------------------------------------------------------- */
+.card:hover,
+.post:hover,
+.team-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-soft-border);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.28),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.pillar {
+  transition:
+    transform 0.2s var(--ease-corp),
+    border-color 0.2s var(--ease-corp),
+    box-shadow 0.25s var(--ease-corp);
+}
+.pillar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+}
+
+/* ---------------------------------------------------------------
+   5) EFEITO 3D — TILT + SPOTLIGHT (bônus)
+   As variáveis --tilt-x / --tilt-y / --spot-x / --spot-y são
+   atualizadas via JavaScript (ver bloco "ENHANCE.JS" no final de
+   icons.js) a partir da posição do mouse sobre o card. Aqui só
+   definimos COMO essas variáveis afetam o visual.
+
+   Aplicado apenas a cards de conteúdo "de vitrine" (posts, cards
+   de resultado de busca, cards de time e pillars da landing) —
+   evitamos aplicar em elementos utilitários pequenos (composer,
+   stat-tile) para não parecer exagerado/lúdico.
+
+   Respeita `prefers-reduced-motion` e é ignorado automaticamente
+   em telas touch (o JS só liga o efeito com `matchMedia
+   ("(pointer: fine)")`).
+   --------------------------------------------------------------- */
+.tilt-3d {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --spot-x: 50%;
+  --spot-y: 50%;
+  transform-style: preserve-3d;
+  perspective: 900px;
+  transform: perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition:
+    transform 0.35s var(--ease-corp),
+    border-color 0.2s,
+    box-shadow 0.3s;
+  will-change: transform;
+}
+.tilt-3d.tilt-active {
+  transition: transform 0.06s linear;
+}
+
+/* Spotlight: brilho sutil que segue o cursor dentro do card */
+.tilt-3d::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    260px circle at var(--spot-x) var(--spot-y),
+    rgba(199, 255, 0, 0.08),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-corp);
+  pointer-events: none;
+}
+.tilt-3d.tilt-active::after {
+  opacity: 1;
+}
+
+/* Desliga qualquer animação/efeito 3D para quem pediu menos
+   movimento no sistema operacional — acessibilidade em primeiro
+   lugar. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+  .tilt-3d {
+    transform: none !important;
+  }
+}

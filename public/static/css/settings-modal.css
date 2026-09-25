@@ -1,0 +1,118 @@
+/* ============================================================
+   CONFIGURAÇÕES E MODAL — zona de perigo, tabs de config e modais
+   Extraído do style.css original (mesmas regras, sem alterações
+   de cor/layout — apenas reorganizado em arquivo próprio).
+   ============================================================ */
+
+/* ================= Danger zone / config ================= */
+
+.danger-zone {
+  border-color: rgba(255, 92, 92, 0.25);
+}
+.danger-zone .card-title {
+  color: var(--danger);
+}
+.danger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.danger-row p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-dim);
+  max-width: 340px;
+}
+
+.settings-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.settings-tab {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.settings-tab.active {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft-border);
+  color: var(--accent);
+}
+
+/* ================= Modal ================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.modal-overlay.open {
+  display: flex;
+}
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  width: 100%;
+  max-width: 380px;
+}
+.modal-box h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.modal-box p {
+  font-size: 13.5px;
+  color: var(--text-dim);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ================= Error pages ================= */
+
+.error-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+.error-shell .code {
+  font-size: 84px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+}
+.error-shell h1 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.error-shell p {
+  color: var(--text-dim);
+  font-size: 14px;
+  max-width: 340px;
+  margin: 0 auto 26px;
+  line-height: 1.55;
+}
+

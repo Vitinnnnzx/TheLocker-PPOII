@@ -1,0 +1,352 @@
+/* ============================================================
+   SHELL — logo (CORRIGIDA), brand, grid do app, sidebar e topbar
+   Extraído do style.css original (mesmas regras, sem alterações
+   de cor/layout — apenas reorganizado em arquivo próprio).
+   ============================================================ */
+
+/* [CORREÇÃO DA LOGO — Claudio]
+   Bug original: ".logo { width: 18%; }" não tinha altura nem
+   aspect-ratio definidos. Como ".brand" é um item flex cujo
+   container-pai muda de largura em cada tela (sidebar do feed,
+   topbar da landing, painel de auth), o "18%" resolvia para um
+   valor diferente e instável em cada lugar — por isso a logo
+   aparecia ora minúscula, ora enorme e com proporção quebrada.
+   Correção: a logo passa a ter uma ALTURA fixa por contexto
+   (coerente com a hierarquia visual de cada tela) e a LARGURA é
+   sempre calculada automaticamente a partir da proporção real do
+   arquivo (137×167px), travada via aspect-ratio + object-fit.
+   Isso garante que a imagem NUNCA estique, em nenhum container.
+   Nenhuma cor, estrutura HTML ou layout foi alterada. */
+.logo {
+  width: auto;
+  height: 32px; /* tamanho padrão (usado onde nenhum override abaixo se aplica) */
+  max-width: 100%;
+  aspect-ratio: 137 / 167; /* proporção real do arquivo LogoTlocker.png */
+  object-fit: contain; /* nunca esmaga/estica, apenas encaixa mantendo proporção */
+  flex-shrink: 0; /* evita que o flex comprima a logo dentro do .brand */
+}
+
+/* Logo pequena, ao lado do texto "THE LOCKER" na sidebar do feed */
+.sidebar .brand .logo {
+  height: 26px;
+}
+
+/* Logo no topo da landing page (index) */
+.landing-topbar .brand .logo {
+  height: 30px;
+}
+
+/* Logo maior no painel visual das telas de login / criar conta */
+.auth-visual .brand .logo {
+  height: 48px;
+}
+
+/* ================= Brand ================= */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+/* ================= App shell (grid) ================= */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  grid-template-rows: var(--topbar-h) 1fr;
+  min-height: 100vh;
+  min-width: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar .brand {
+  padding: 0 8px;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+  font-size: 14.5px;
+  font-weight: 600;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.nav-link svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+.nav-link:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.btn-post {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: none;
+  border-radius: 999px;
+  padding: 13px;
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    transform 0.1s,
+    opacity 0.15s;
+}
+.btn-post:hover {
+  opacity: 0.9;
+}
+.btn-post:active {
+  transform: scale(0.98);
+}
+.btn-post svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sidebar-section {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dimmer);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0 12px;
+}
+
+.sidebar-team-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.sidebar-team-row:hover {
+  background: var(--surface);
+}
+
+.sidebar-team-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sidebar-team-row .meta {
+  min-width: 0;
+}
+.sidebar-team-row .meta .n {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-team-row .meta .s {
+  font-size: 11px;
+  color: var(--text-dimmer);
+  font-weight: 500;
+}
+
+/* ================= Topbar ================= */
+
+.topbar {
+  grid-row: 1;
+  grid-column: 2;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 25;
+}
+
+.topbar .search-box {
+  flex: 1;
+  max-width: 440px;
+}
+
+.topbar-spacer {
+  flex: 1;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 999px;
+}
+.user-menu-trigger:hover {
+  background: var(--surface);
+}
+.user-menu-trigger svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-dim);
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 220px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+  display: none;
+  z-index: 40;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+.user-menu-dropdown.open {
+  display: block;
+}
+
+.user-menu-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+.user-menu-head .name {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.user-menu-head .tipo {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  text-transform: capitalize;
+}
+
+.user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+.user-menu-item svg {
+  width: 17px;
+  height: 17px;
+  color: var(--text-dim);
+}
+.user-menu-item:hover {
+  background: var(--surface-2);
+}
+.user-menu-item.danger {
+  color: var(--danger);
+}
+.user-menu-item.danger svg {
+  color: var(--danger);
+}
+
+/* ================= Content columns ================= */
+
+.content {
+  grid-row: 2;
+  grid-column: 2;
+  min-width: 0;
+  display: flex;
+  gap: 24px;
+  padding: 24px 28px 48px;
+  max-width: 1180px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.content.narrow {
+  max-width: 760px;
+}
+
+.main-col {
+  flex: 1;
+  min-width: 0;
+  max-width: 620px;
+}
+
+.aside-col {
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: calc(var(--topbar-h) + 24px);
+}
+
+@media (max-width: 1020px) {
+  .aside-col {
+    display: none;
+  }
+}
+

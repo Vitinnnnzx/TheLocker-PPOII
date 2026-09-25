@@ -1,0 +1,453 @@
+/* ============================================================
+   FEED — stories, composer de post, tabs, posts, comentários e stat tiles
+   Extraído do style.css original (mesmas regras, sem alterações
+   de cor/layout — apenas reorganizado em arquivo próprio).
+   ============================================================ */
+
+/* ================= Story / following strip ================= */
+
+.strip-card {
+  padding: 16px 16px 12px;
+}
+.avatar-strip {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.avatar-strip-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  width: 62px;
+}
+.avatar-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  padding: 2.5px;
+  background: conic-gradient(
+    from 180deg,
+    var(--accent),
+    var(--teal),
+    var(--accent)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-ring .avatar {
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--bg);
+}
+.avatar-strip-item .lbl {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 62px;
+}
+.avatar-strip-empty {
+  font-size: 12.5px;
+  color: var(--text-dimmer);
+  padding: 8px 4px 4px;
+}
+
+/* ================= Composer ================= */
+
+.composer {
+  display: flex;
+  gap: 12px;
+}
+.composer .body {
+  flex: 1;
+}
+.composer textarea {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 13px 14px;
+  font-size: 14.5px;
+  resize: vertical;
+  min-height: 54px;
+  outline: none;
+  font-family: inherit;
+}
+.composer textarea:focus {
+  border-color: var(--accent);
+}
+.composer .composer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+.composer .composer-footer .img-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 4px 0 10px;
+}
+.composer .composer-footer .img-field svg {
+  width: 15px;
+  height: 15px;
+  color: var(--text-dimmer);
+  flex-shrink: 0;
+}
+.composer .composer-footer input[type="text"] {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 9px 8px;
+  font-size: 12.5px;
+  outline: none;
+}
+
+/* ================= Tabs ================= */
+
+.tab-row {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin: 4px 0 18px;
+}
+.tab {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  padding: 10px 4px;
+  margin-right: 20px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.tab.active {
+  color: var(--text);
+  border-color: var(--accent);
+}
+.tab-panel {
+  display: none;
+}
+.tab-panel.active {
+  display: block;
+}
+
+/* ================= Posts ================= */
+
+.post {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: 16px;
+}
+.post + .post {
+  margin-top: 14px;
+}
+.post-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.post-head .who {
+  min-width: 0;
+  flex: 1;
+}
+.post-head .who .name-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.post-head .who .name {
+  font-weight: 700;
+  font-size: 14px;
+}
+.post-head .who .time {
+  font-size: 12px;
+  color: var(--text-dimmer);
+}
+
+/* [Claudio] Novo: botão de excluir postagem (só existe no HTML quando
+   a postagem é do próprio usuário — ver postCardHTML em posts.js).
+   Fica discreto por padrão e só destaca em vermelho (--danger, cor já
+   usada na "zona de perigo" de configurações) no hover do próprio
+   botão — nunca compete visualmente com o resto do post. */
+.post-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  margin-left: auto;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-dimmer);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.post-delete-btn svg {
+  width: 16px;
+  height: 16px;
+}
+.post-delete-btn:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.post-delete-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.tag-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tag-pill.blue {
+  background: rgba(78, 168, 255, 0.1);
+  color: var(--blue);
+}
+.tag-pill.teal {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--teal);
+}
+
+.post-text {
+  margin: 12px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.post-image {
+  margin-top: 12px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  max-height: 420px;
+}
+.post-image img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.post-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.post-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.post-action:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.post-action.liked {
+  color: var(--accent);
+}
+.post-action svg {
+  width: 17px;
+  height: 17px;
+}
+
+.comments-panel {
+  margin-top: 12px;
+  display: none;
+}
+.comments-panel.open {
+  display: block;
+}
+.comment-row {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+.comment-row .bubble {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 13.5px;
+}
+.comment-row .bubble .name {
+  font-weight: 700;
+  font-size: 12.5px;
+  margin-bottom: 2px;
+}
+.comment-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.comment-form input {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 13px;
+  outline: none;
+}
+.comment-form input:focus {
+  border-color: var(--accent);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--text-dim);
+}
+.empty-state svg {
+  width: 34px;
+  height: 34px;
+  color: var(--text-dimmer);
+  margin: 0 auto 14px;
+}
+.empty-state h3 {
+  color: var(--text);
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+.empty-state p {
+  font-size: 13.5px;
+  margin: 0;
+}
+.loading-row {
+  color: var(--text-dim);
+  font-size: 13px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* ================= Stat tiles ================= */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.stat-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.stat-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.stat-tile {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px;
+  text-align: center;
+}
+.stat-tile b {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.stat-tile span {
+  font-size: 10px;
+  color: var(--text-dimmer);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+.stat-tile.lime b {
+  color: var(--accent);
+}
+.stat-tile.blue b {
+  color: var(--blue);
+}
+.stat-tile.orange b {
+  color: var(--orange);
+}
+.stat-tile.teal b {
+  color: var(--teal);
+}
+
+/* ================= Aside widgets ================= */
+
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+}
+.list-row + .list-row {
+  border-top: 1px solid var(--border);
+}
+.list-row .name {
+  font-size: 13.5px;
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.list-row .sub {
+  font-size: 11.5px;
+  color: var(--text-dimmer);
+}
+
+.featured-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+.featured-row + .featured-row {
+  border-top: 1px solid var(--border);
+}
+.featured-row .meta {
+  flex: 1;
+  min-width: 0;
+}
+.featured-row .meta .n {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.featured-row .meta .s {
+  font-size: 11px;
+  color: var(--text-dimmer);
+}
+

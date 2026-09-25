@@ -105,6 +105,8 @@ function renderTabVoce() {
   renderPostList("feed-list-voce", "voce", todasPostagens, {
     emptyTitle: "Nenhuma publicação ainda",
     emptyText: "Seja o primeiro a compartilhar uma atualização.",
+    usuarioAtualId: usuarioAtual?.id,
+    onDelete: removerPostagemLocal,
   });
 }
 
@@ -113,6 +115,8 @@ function renderTabSeguindo() {
   renderPostList("feed-list-seguindo", "seguindo", filtradas, {
     emptyTitle: "Nada por aqui ainda",
     emptyText: "Siga atletas e times para ver as publicações deles nesta aba.",
+    usuarioAtualId: usuarioAtual?.id,
+    onDelete: removerPostagemLocal,
   });
 }
 
@@ -121,7 +125,20 @@ function renderTabTimes() {
   renderPostList("feed-list-times", "times", filtradas, {
     emptyTitle: "Nenhum time publicou ainda",
     emptyText: "Publicações de contas de times aparecem aqui.",
+    usuarioAtualId: usuarioAtual?.id,
+    onDelete: removerPostagemLocal,
   });
+}
+
+// [Claudio] Novo: chamado depois que uma postagem é excluída com sucesso
+// em qualquer uma das 3 abas. Tira a postagem de "todasPostagens" (a
+// fonte da verdade) e redesenha as 3 abas, pra ela sumir de todo lugar
+// (ex: se você exclui pela aba "Você", ela some também de "Times").
+function removerPostagemLocal(postagemId) {
+  todasPostagens = todasPostagens.filter((p) => p.id !== postagemId);
+  renderTabVoce();
+  renderTabSeguindo();
+  renderTabTimes();
 }
 
 async function publicar() {

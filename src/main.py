@@ -28,4 +28,4 @@ login_manager.init_app(app)
 login_manager.login_view = "pages.login"
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=6767)
+    app.run(debug=True, port=6767)

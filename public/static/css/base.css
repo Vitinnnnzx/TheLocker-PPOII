@@ -1,0 +1,94 @@
+/* ============================================================
+   BASE — fonte, variáveis de design (:root), reset e tipografia global
+   Extraído do style.css original (mesmas regras, sem alterações
+   de cor/layout — apenas reorganizado em arquivo próprio).
+   ============================================================ */
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #141416;
+  --surface-2: #1c1c20;
+  --surface-3: #232327;
+  --border: #232327;
+  --text: #f4f5f6;
+  --text-dim: #8c8d93;
+  --text-dimmer: #5f6066;
+
+  --accent: #c7ff00;
+  --accent-ink: #0d0f05;
+  --accent-soft: rgba(199, 255, 0, 0.1);
+  --accent-soft-border: rgba(199, 255, 0, 0.25);
+
+  --blue: #4ea8ff;
+  --orange: #f97316;
+  --teal: #10b981;
+  --purple: #a78bfa;
+  --danger: #ff5c5c;
+  --danger-soft: rgba(255, 92, 92, 0.1);
+
+  --radius-lg: 18px;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --sidebar-w: 232px;
+  --topbar-h: 68px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+  color: inherit;
+}
+::placeholder {
+  color: var(--text-dimmer);
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+svg {
+  display: block;
+}
+

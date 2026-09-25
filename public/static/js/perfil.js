@@ -82,16 +82,32 @@ async function carregarPostagens() {
     minhasPostagens = todas.filter((p) => p.usuario.id === meusDados.id);
     loaded.postagens = true;
 
-    const statEl = document.getElementById("stat-postagens");
-    if (statEl) statEl.textContent = minhasPostagens.length;
-
-    renderPostList("tab-postagens", "meuperfil", minhasPostagens, {
-      emptyTitle: "Você ainda não publicou nada",
-      emptyText: "Vá até o feed e compartilhe sua primeira atualização.",
-    });
+    atualizarContadorPostagens();
+    desenharMinhasPostagens();
   } catch (e) {
     el.innerHTML = `<div class="loading-row">Erro ao carregar postagens.</div>`;
   }
+}
+
+// [Claudio] Extraído de dentro de carregarPostagens pra poder ser
+// chamado de novo depois que uma postagem é excluída (evita repetir
+// as mesmas opções de render em dois lugares diferentes).
+function desenharMinhasPostagens() {
+  renderPostList("tab-postagens", "meuperfil", minhasPostagens, {
+    emptyTitle: "Você ainda não publicou nada",
+    emptyText: "Vá até o feed e compartilhe sua primeira atualização.",
+    usuarioAtualId: meusDados?.id,
+    onDelete: (postagemId) => {
+      minhasPostagens = minhasPostagens.filter((p) => p.id !== postagemId);
+      atualizarContadorPostagens();
+      desenharMinhasPostagens();
+    },
+  });
+}
+
+function atualizarContadorPostagens() {
+  const statEl = document.getElementById("stat-postagens");
+  if (statEl) statEl.textContent = minhasPostagens.length;
 }
 
 async function carregarTimes() {

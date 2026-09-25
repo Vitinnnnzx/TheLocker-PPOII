@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Criar conta — TheLocker</title>
     <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/kinetic-grid.css" />
     <link
       rel="shortcut icon"
       href="{{ url_for('static', filename='/img/FaviconTlock.png') }}"
@@ -14,6 +15,9 @@
   <body>
     <div class="auth-shell">
       <div class="auth-visual">
+        <div class="kinetic-grid" id="kineticGrid" aria-hidden="true">
+          <div class="kinetic-grid__inner" id="kineticGridInner"></div>
+        </div>
         <a class="brand" href="/">
           <img class="logo" src="./static/img/LogoTlocker.png" alt="logo"
         /></a>
@@ -121,5 +125,6 @@
     </script>
     <script src="/static/js/api.js"></script>
     <script src="/static/js/criar-conta.js"></script>
+    <script src="/static/js/kinetic-grid.js"></script>
   </body>
 </html>
